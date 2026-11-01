@@ -90,7 +90,7 @@ export function Hero({ ready }: { ready: boolean }) {
               delay={0.25}
               stagger={0.08}
               className="text-display font-bold"
-              lineClassName={(i) => (i === 1 ? 'text-cyan' : '')}
+              lineClassName={(i) => `md:whitespace-nowrap ${i === 1 ? 'text-cyan' : ''}`}
             />
           </div>
 

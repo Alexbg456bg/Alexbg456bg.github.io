@@ -30,7 +30,7 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        display: ['clamp(2.75rem, 8.5vw, 7.5rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
+        display: ['clamp(2.75rem, 8.5vw, 6.5rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
         h2: ['clamp(2rem, 5vw, 4rem)', { lineHeight: '1.04', letterSpacing: '-0.03em' }],
         h3: ['clamp(1.375rem, 2.2vw, 1.75rem)', { lineHeight: '1.2', letterSpacing: '-0.015em' }],
       },
