@@ -1,7 +1,9 @@
 import { m } from 'framer-motion'
 import { useLayoutEffect, useRef, useState, type MouseEvent } from 'react'
 import { Bracket } from '../components/brand/Logo'
+import { Aurora } from '../components/ui/Atmosphere'
 import { CursorGrid } from '../components/ui/CursorGrid'
+import { HeroShowcase } from '../components/ui/HeroShowcase'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { RevealText } from '../components/ui/RevealText'
 import { hero } from '../content'
@@ -61,16 +63,16 @@ export function Hero({ ready }: { ready: boolean }) {
     <section
       id="top"
       aria-labelledby="hero-title"
-      className="relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-[calc(var(--header-h)+3rem)]"
+      className="relative overflow-hidden pb-24 pt-[calc(var(--header-h)+3.5rem)] sm:pb-36 sm:pt-[calc(var(--header-h)+5rem)]"
     >
+      <Aurora />
       <CursorGrid />
-      <div
-        className="pointer-events-none absolute left-1/2 top-[-20%] h-[70vmax] w-[70vmax] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,194,255,0.13),transparent_62%)]"
-        aria-hidden="true"
-      />
 
       <div className="container-x relative flex flex-col items-center text-center">
-        <m.p className="eyebrow flex items-center gap-2" {...fadeUp(0.1)}>
+        <m.p
+          className="glass-border eyebrow flex items-center gap-2.5 rounded-full bg-navy-850/60 px-4 py-2 backdrop-blur"
+          {...fadeUp(0.1)}
+        >
           <Bracket side="left" strokeWidth={70} className="h-3 w-auto" />
           {hero.eyebrow}
           <Bracket side="right" strokeWidth={70} className="h-3 w-auto" />
@@ -90,7 +92,7 @@ export function Hero({ ready }: { ready: boolean }) {
               delay={0.25}
               stagger={0.08}
               className="text-display font-bold"
-              lineClassName={(i) => `md:whitespace-nowrap ${i === 1 ? 'text-cyan' : ''}`}
+              lineClassName={(i) => `md:whitespace-nowrap ${i === 1 ? 'text-cyan' : '[&_span_span]:text-gradient'}`}
             />
           </div>
 
@@ -112,24 +114,9 @@ export function Hero({ ready }: { ready: boolean }) {
             {hero.secondaryCta}
           </MagneticButton>
         </m.div>
-      </div>
 
-      <m.div
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 sm:flex"
-        {...fadeUp(1.3)}
-        aria-hidden="true"
-      >
-        <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-ink-faint">{hero.scrollHint}</span>
-        <span className="relative block h-10 w-px overflow-hidden bg-line">
-          {!reduced && (
-            <m.span
-              className="absolute inset-x-0 top-0 block h-1/2 bg-cyan"
-              animate={{ y: ['-100%', '200%'] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          )}
-        </span>
-      </m.div>
+        <HeroShowcase play={play} />
+      </div>
     </section>
   )
 }

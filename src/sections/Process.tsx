@@ -1,73 +1,64 @@
 import { m, useScroll, useSpring } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { FadeIn } from '../components/ui/RevealText'
-import { SectionHeader } from '../components/ui/SectionHeader'
+import { FadeIn, RevealText } from '../components/ui/RevealText'
 import { process } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
 
-const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+const pad = (n: number) => String(n).padStart(2, '0')
 
-/** Odometer-style number: each digit rolls up to its value when it enters the viewport. */
-function RollingNumber({ value, active }: { value: string; active: boolean }) {
-  const reduced = useReducedMotion()
+/** Huge outlined step number that rolls to the active step. */
+function BigCounter({ active }: { active: number }) {
   return (
-    <span
-      className={`inline-flex font-mono text-4xl font-medium leading-none tabular-nums transition-colors duration-500 sm:text-5xl ${
-        active ? 'text-cyan' : 'text-ink-faint'
-      }`}
-      aria-hidden="true"
-    >
-      {value.split('').map((d, i) =>
-        reduced ? (
-          <span key={i}>{d}</span>
-        ) : (
-          <span key={i} className="relative inline-block h-[1em] overflow-hidden">
-            <m.span
-              className="flex flex-col"
-              initial={{ y: '0%' }}
-              whileInView={{ y: `-${Number(d) * 10}%` }}
-              viewport={{ once: true, margin: '0px 0px -15% 0px' }}
-              transition={{ duration: 1.1, ease: easeBrand, delay: 0.1 + i * 0.12 }}
-            >
-              {DIGITS.map((n) => (
-                <span key={n} className="block h-[1em]">
-                  {n}
-                </span>
-              ))}
-            </m.span>
-          </span>
-        ),
-      )}
-    </span>
+    <div className="relative h-[1em] overflow-hidden font-mono text-[clamp(6rem,14vw,13rem)] font-medium leading-none" aria-hidden="true">
+      <m.div animate={{ y: `-${active * 100}%` }} transition={{ duration: 0.8, ease: easeBrand }}>
+        {process.steps.map((_, i) => (
+          <div key={i} className="text-outline h-[1em] [-webkit-text-stroke-color:rgba(0,194,255,0.6)]">
+            {pad(i + 1)}
+          </div>
+        ))}
+      </m.div>
+    </div>
   )
 }
 
-function Step({ index, title, text }: { index: number; title: string; text: string }) {
-  const [active, setActive] = useState(false)
-  const number = String(index + 1).padStart(2, '0')
+function Step({
+  index,
+  title,
+  text,
+  active,
+  onActive,
+}: {
+  index: number
+  title: string
+  text: string
+  active: boolean
+  onActive: (i: number) => void
+}) {
   return (
     <m.li
-      className="relative grid grid-cols-[4.5rem_minmax(0,1fr)] gap-x-5 py-10 sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-x-8"
-      onViewportEnter={() => setActive(true)}
-      onViewportLeave={() => setActive(false)}
+      className="relative py-12 sm:py-16 sm:pl-12"
+      onViewportEnter={() => onActive(index)}
       viewport={{ margin: '-45% 0px -45% 0px' }}
     >
       <span
-        className={`absolute -left-[5px] top-12 hidden h-2.5 w-2.5 rounded-full ring-4 ring-navy-950 transition-colors duration-500 sm:block ${
-          active ? 'bg-cyan' : 'bg-navy-700'
+        className={`absolute -left-[6px] top-[4.4rem] hidden h-3 w-3 rounded-full ring-4 ring-navy-950 transition-colors duration-500 sm:block ${
+          active ? 'bg-cyan shadow-[0_0_20px_rgba(0,194,255,0.8)]' : 'bg-navy-700'
         }`}
         aria-hidden="true"
       />
-      <div className="sm:pl-8">
-        <RollingNumber value={number} active={active} />
-      </div>
       <FadeIn>
-        <h3 className="text-h3 font-semibold">
-          <span className="sr-only">{number}. </span>
+        <p className={`font-mono text-sm transition-colors duration-500 ${active ? 'text-cyan' : 'text-ink-faint'}`}>
+          {pad(index + 1)} / {pad(process.steps.length)}
+        </p>
+        <h3
+          className={`mt-3 text-[clamp(1.75rem,3.4vw,2.75rem)] font-bold leading-tight tracking-tight transition-colors duration-500 ${
+            active ? 'text-ink' : 'text-ink/45'
+          }`}
+        >
           {title}
         </h3>
-        <p className="mt-3 max-w-md text-pretty leading-relaxed text-ink-muted">{text}</p>
+        <p className="mt-4 max-w-md text-pretty text-lg leading-relaxed text-ink-muted">{text}</p>
       </FadeIn>
     </m.li>
   )
@@ -76,29 +67,40 @@ function Step({ index, title, text }: { index: number; title: string; text: stri
 export function Process() {
   const listRef = useRef<HTMLOListElement>(null)
   const reduced = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start 60%', 'end 60%'] })
+  const [active, setActive] = useState(0)
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start 55%', 'end 55%'] })
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 })
 
   return (
     <section id="proces" aria-labelledby="proces-title" className="relative py-24 sm:py-32 lg:py-40">
       <div className="container-x grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-        <SectionHeader
-          id="proces-title"
-          eyebrow={process.eyebrow}
-          title={process.title}
-          className="lg:sticky lg:top-32 lg:self-start"
-        />
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <FadeIn>
+            <p className="eyebrow">{process.eyebrow}</p>
+          </FadeIn>
+          <RevealText id="proces-title" lines={[process.title]} className="mt-4 text-h2 font-bold" />
+          <div className="mt-10 hidden lg:block">
+            <BigCounter active={active} />
+          </div>
+        </div>
 
         <ol ref={listRef} className="relative sm:border-l sm:border-line">
           {!reduced && (
             <m.span
-              className="absolute -left-px top-0 hidden h-full w-px origin-top bg-cyan sm:block"
+              className="absolute -left-px top-0 hidden h-full w-px origin-top bg-gradient-to-b from-cyan to-cyan/40 sm:block"
               style={{ scaleY: progress }}
               aria-hidden="true"
             />
           )}
           {process.steps.map((step, i) => (
-            <Step key={step.title} index={i} title={step.title} text={step.text} />
+            <Step
+              key={step.title}
+              index={i}
+              title={step.title}
+              text={step.text}
+              active={active === i || reduced}
+              onActive={setActive}
+            />
           ))}
         </ol>
       </div>

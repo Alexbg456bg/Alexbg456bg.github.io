@@ -1,10 +1,13 @@
 import { AnimatePresence, LazyMotion, MotionConfig } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { Navigate, useLocation, useMatch } from 'react-router-dom'
-import { portfolio, ui } from './content'
+import { BracketSeparator, Grain, Marquee } from './components/ui/Atmosphere'
+import { CustomCursor } from './components/ui/CustomCursor'
+import { marquee, portfolio, ui } from './content'
 import { useReducedMotion } from './lib/media'
 import { useIntroReady } from './lib/preloader'
 import { SmoothScrollProvider } from './lib/smooth-scroll'
+import { CallToAction } from './sections/CallToAction'
 import { CaseStudy } from './sections/CaseStudy'
 import { Contact } from './sections/Contact'
 import { Footer } from './sections/Footer'
@@ -45,14 +48,23 @@ export default function App() {
             <Header />
             <main id="main" tabIndex={-1} className="outline-none">
               <Hero ready={ready} />
+              <Marquee
+                items={marquee}
+                className="border-y border-line bg-navy-950/60 py-5"
+                itemClassName="whitespace-nowrap text-xl font-semibold tracking-tight text-ink-muted sm:text-2xl"
+                separator={<BracketSeparator />}
+              />
               <Services />
               <Portfolio />
               <Process />
+              <CallToAction />
               <Contact />
             </main>
             <Footer />
           </div>
           <AnimatePresence>{project && <CaseStudy key={project.slug} project={project} />}</AnimatePresence>
+          <CustomCursor />
+          <Grain />
         </SmoothScrollProvider>
       </MotionConfig>
     </LazyMotion>

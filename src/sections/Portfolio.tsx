@@ -5,7 +5,7 @@ import { ArrowIcon } from '../components/ui/MagneticButton'
 import { ProjectShot } from '../components/ui/ProjectShot'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
-import { portfolio, ui, type Project } from '../content'
+import { cursor, portfolio, ui, type Project } from '../content'
 import { useMinWidth, useReducedMotion } from '../lib/media'
 import { useSmoothScroll } from '../lib/smooth-scroll'
 
@@ -68,7 +68,7 @@ export function Portfolio() {
       const el = track.current
       const distance = () => el.scrollWidth - window.innerWidth
       const ctx = gsap.context(() => {
-        gsap.to(el, {
+        const slide = gsap.to(el, {
           x: () => -distance(),
           ease: 'none',
           scrollTrigger: {
@@ -83,6 +83,12 @@ export function Portfolio() {
               if (progress.current) progress.current.style.transform = `scaleX(${self.progress})`
             },
           },
+        })
+        // Inside the horizontal track: screenshots drift against the movement, numbers with it.
+        el.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
+          const trigger = { trigger: panel, containerAnimation: slide, start: 'left right', end: 'right left', scrub: true }
+          gsap.fromTo(panel.querySelector('[data-parallax]'), { x: 90 }, { x: -90, ease: 'none', scrollTrigger: trigger })
+          gsap.fromTo(panel.querySelector('[data-number]'), { x: -160 }, { x: 160, ease: 'none', scrollTrigger: trigger })
         })
       }, section)
 
@@ -114,13 +120,32 @@ export function Portfolio() {
             {portfolio.items.map((p, i) => (
               <article
                 key={p.slug}
+                data-panel
                 aria-labelledby={`p-${p.slug}`}
-                className="grid h-full w-[86vw] shrink-0 grid-cols-[minmax(0,7fr)_minmax(0,4fr)] items-center gap-12 px-12 xl:w-[80vw]"
+                className="relative grid h-full w-[86vw] shrink-0 grid-cols-[minmax(0,7fr)_minmax(0,4fr)] items-center gap-12 px-12 xl:w-[80vw]"
               >
-                <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="group block">
-                  <ProjectShot project={p} className="transition-transform duration-700 ease-brand group-hover:scale-[1.015]" />
+                <span
+                  data-number
+                  className="text-outline pointer-events-none absolute -top-[0.08em] right-[6%] select-none font-mono text-[clamp(10rem,24vw,24rem)] font-medium leading-none opacity-60"
+                  aria-hidden="true"
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <Link
+                  to={`/proekti/${p.slug}`}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  data-cursor="view"
+                  data-cursor-label={cursor.view}
+                  className="group relative block"
+                >
+                  <div data-parallax>
+                    <ProjectShot project={p} className="transition-transform duration-700 ease-brand group-hover:scale-[1.02]" />
+                  </div>
                 </Link>
-                <ProjectText project={p} index={i} />
+                <div className="relative">
+                  <ProjectText project={p} index={i} />
+                </div>
               </article>
             ))}
             <div className="w-[8vw] shrink-0" aria-hidden="true" />
@@ -137,7 +162,14 @@ export function Portfolio() {
               <li key={p.slug}>
                 <article aria-labelledby={`p-${p.slug}`}>
                   <FadeIn className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:gap-14">
-                    <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="block">
+                    <Link
+                      to={`/proekti/${p.slug}`}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                      data-cursor="view"
+                      data-cursor-label={cursor.view}
+                      className="block"
+                    >
                       <ProjectShot project={p} />
                     </Link>
                     <ProjectText project={p} index={i} />

@@ -24,7 +24,33 @@ export const hero = {
   primaryCta: 'Виж проектите',
   secondaryCta: 'Заяви оферта',
   scrollHint: 'Скролни надолу',
+  showcase: {
+    live: 'На живо',
+    file: 'Сайт.tsx',
+    // Illustrative JSX shown typing in the hero editor. Not real code from a project.
+    code: [
+      [{ t: '<', c: 'b' }, { t: 'Сайт', c: 'tag' }, { t: ' клиент', c: 'attr' }, { t: '=', c: 'p' }, { t: '"вашата фирма"', c: 'str' }, { t: '>', c: 'b' }],
+      [{ t: '  <', c: 'b' }, { t: 'Дизайн', c: 'tag' }, { t: ' уникален', c: 'attr' }, { t: ' />', c: 'b' }],
+      [{ t: '  <', c: 'b' }, { t: 'Анимации', c: 'tag' }, { t: ' плавни', c: 'attr' }, { t: ' />', c: 'b' }],
+      [{ t: '  <', c: 'b' }, { t: 'Адаптивен', c: 'tag' }, { t: ' телефон таблет', c: 'attr' }, { t: ' />', c: 'b' }],
+      [{ t: '  <', c: 'b' }, { t: 'АдминПанел', c: 'tag' }, { t: ' />', c: 'b' }],
+      [{ t: '</', c: 'b' }, { t: 'Сайт', c: 'tag' }, { t: '>', c: 'b' }],
+    ] as { t: string; c: 'b' | 'tag' | 'attr' | 'p' | 'str' }[][],
+  },
 }
+
+// Decorative running strip under the hero (the services, nothing more).
+export const marquee = ['Каталожни сайтове', 'Бизнес сайтове', 'Админ панел', 'Хостинг', 'Поддръжка', 'React']
+
+export const cta = {
+  lines: ['Имате идея', 'за сайт?'],
+  text: 'Разкажете ни я. Ще ви помогнем да стане сайт, с който да се гордеете.',
+  button: 'Заяви оферта',
+  ring: 'заяви оферта • заяви оферта • ',
+  strip: ['Да започнем', 'Пишете ни', 'Да направим вашия сайт'],
+}
+
+export const cursor = { view: 'Виж' }
 
 export type ServiceIcon = 'catalog' | 'business' | 'cms' | 'hosting'
 
@@ -179,6 +205,7 @@ export const contact = {
 
 export const footer = {
   tagline: 'Уеб сайтове на React.',
+  wordmark: 'aecodezonebg',
   copyright: 'aecodezonebg © 2026',
   toTop: 'Към началото',
 }

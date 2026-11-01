@@ -74,6 +74,198 @@
   .skip-link:focus {
     @apply translate-y-0;
   }
+
+  /* Hairline border that is brighter at the top, like light hitting glass. */
+  .glass-border {
+    position: relative;
+  }
+  .glass-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(234, 241, 248, 0.22), rgba(234, 241, 248, 0.04) 40%, rgba(0, 194, 255, 0.12));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0, 194, 255, 0.35);
+  }
+
+  .text-gradient {
+    background: linear-gradient(180deg, #eaf1f8 20%, rgba(234, 241, 248, 0.55));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee var(--marquee-duration, 38s) linear infinite;
+  }
+  .animate-marquee-reverse {
+    animation: marquee var(--marquee-duration, 38s) linear infinite reverse;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-spin-slow {
+    animation: spin 18s linear infinite;
+  }
+  .animate-blink {
+    animation: blink 1.1s steps(1) infinite;
+  }
+  .animate-pulse-ring {
+    animation: pulse-ring 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .animate-build {
+    animation: build 6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  }
+  .animate-toggle {
+    animation: toggle 3.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  .animate-slide-knob {
+    animation: slide-knob 4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  .animate-swap-a {
+    animation: swap 3.2s steps(1) infinite;
+  }
+  .animate-swap-b {
+    animation: swap 3.2s steps(1) infinite reverse;
+  }
+  .animate-aurora-1 {
+    animation: aurora-1 22s ease-in-out infinite;
+  }
+  .animate-aurora-2 {
+    animation: aurora-2 28s ease-in-out infinite;
+  }
+  .animate-aurora-3 {
+    animation: aurora-3 34s ease-in-out infinite;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+@keyframes build {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  12%,
+  82% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes toggle {
+  0%,
+  40% {
+    transform: translateX(0);
+  }
+  50%,
+  90% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes slide-knob {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(var(--knob-travel, 80px));
+  }
+}
+@keyframes swap {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes aurora-1 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12%, 8%, 0) scale(1.2);
+  }
+}
+@keyframes aurora-2 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-14%, 6%, 0) scale(0.9);
+  }
+}
+@keyframes aurora-3 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, -10%, 0) scale(1.25);
+  }
+}
+
+/* Custom cursor: hide the native one only where ours is active (desktop, fine pointer). */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+html.has-cursor input,
+html.has-cursor textarea {
+  cursor: text !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
