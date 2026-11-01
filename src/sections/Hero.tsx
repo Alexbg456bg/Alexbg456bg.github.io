@@ -76,6 +76,17 @@ export function Hero({ ready }: { ready: boolean }) {
           </MagneticButton>
         </m.div>
 
+        <m.ul className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-muted" {...fadeUp(0.9)}>
+          {hero.points.map((point) => (
+            <li key={point} className="flex items-center gap-2">
+              <svg viewBox="0 0 16 16" className="h-4 w-4 text-cyan" aria-hidden="true">
+                <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {point}
+            </li>
+          ))}
+        </m.ul>
+
         <HeroScene play={play} />
       </div>
     </section>

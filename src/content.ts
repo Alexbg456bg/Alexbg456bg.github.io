@@ -7,16 +7,18 @@ export const nav: NavItem[] = [
   { id: 'proekti', label: 'Проекти' },
   { id: 'uslugi', label: 'Услуги' },
   { id: 'proces', label: 'Процес' },
+  { id: 'vaprosi', label: 'Въпроси' },
   { id: 'kontakt', label: 'Контакт' },
 ]
 
-/** Sections in page order, for the side progress indicator (01–06). */
+/** Sections in page order, for the side progress indicator (01–07). */
 export const sections: NavItem[] = [
   { id: 'top', label: 'Начало' },
-  { id: 'nashi-proekti', label: 'Нашите проекти' },
+  { id: 'predimstva', label: 'Защо нас' },
   { id: 'proekti', label: 'Портфолио' },
   { id: 'uslugi', label: 'Услуги' },
   { id: 'proces', label: 'Процес' },
+  { id: 'vaprosi', label: 'Въпроси' },
   { id: 'kontakt', label: 'Контакт' },
 ]
 
@@ -37,6 +39,8 @@ export const hero = {
     'Каталожни и бизнес сайтове на React — с админ панел, ако ви трябва, хостинг и поддръжка след пускането.',
   primaryCta: 'Виж проектите',
   secondaryCta: 'Заяви оферта',
+  // Short, confirmed facts shown under the calls to action.
+  points: ['React и TypeScript', 'Адаптивен дизайн', 'Хостинг и поддръжка'],
   scene: {
     file: 'Сайт.tsx',
     url: 'вашият-сайт.bg',
@@ -66,14 +70,36 @@ export const tech = ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Vercel']
 
 export const cursor = { view: 'Виж' }
 
-export const strip = {
-  eyebrow: '02 — Нашите проекти',
-  // "Работим с реални клиенти" is not used: not every project below is confirmed as client work.
-  title: 'Нашите проекти',
-  cta: 'Към портфолиото',
-}
-
 export type ServiceIcon = 'catalog' | 'business' | 'cms' | 'hosting'
+
+/** "Защо нас" — what every site includes. Only confirmed facts. */
+export const features = {
+  eyebrow: '02 — Защо нас',
+  title: 'Какво получавате',
+  intro: 'Всеки сайт, който правим, е изграден по един и същ стандарт — от първия ред код до пускането.',
+  items: [
+    {
+      icon: 'business',
+      title: 'Модерен код',
+      text: 'Сайтът е изграден на React и TypeScript — бърз, подреден и лесен за развитие.',
+    },
+    {
+      icon: 'catalog',
+      title: 'На всяко устройство',
+      text: 'Дизайнът се подрежда сам за телефон, таблет и компютър.',
+    },
+    {
+      icon: 'cms',
+      title: 'Админ панел по желание',
+      text: 'Сменяте текстове и снимки сами, през панел (CMS), без да пишете код.',
+    },
+    {
+      icon: 'hosting',
+      title: 'Хостинг и поддръжка',
+      text: 'Пускаме сайта онлайн и оставаме насреща с месечна поддръжка.',
+    },
+  ] satisfies { icon: ServiceIcon; title: string; text: string }[],
+}
 
 export type Project = {
   slug: string
@@ -89,7 +115,7 @@ export type Project = {
 
 export const portfolio = {
   eyebrow: '03 — Портфолио',
-  title: 'Какво сме направили',
+  title: 'Избрани проекти',
   intro: 'Четири сайта на живо. Отворете който и да е от тях.',
   openSite: 'Отвори сайта',
   viewCase: 'Разгледай проекта',
@@ -236,8 +262,43 @@ export const process = {
   ],
 }
 
+/** Answers built only from confirmed facts. No prices or deadlines. */
+export const faq = {
+  eyebrow: '06 — Въпроси',
+  title: 'Често задавани въпроси',
+  intro: 'Не намирате отговор? Пишете ни — отговаряме лично.',
+  items: [
+    {
+      q: 'Какви сайтове правите?',
+      a: 'Каталожни сайтове — продукти или услуги в категории, със страница за всеки артикул — и бизнес сайтове, които представят какво предлагате, кои сте и как да се свържат с вас.',
+    },
+    {
+      q: 'Ще мога ли сам да променям съдържанието?',
+      a: 'Да, ако изберете админ панел (CMS). През него сменяте текстове и снимки без код. Ако не ви трябва, промените по съдържанието ги правим ние.',
+    },
+    {
+      q: 'Погрижвате ли се за хостинга?',
+      a: 'По желание. Можем да качим сайта на хостинг и да го поддържаме всеки месец, или да ви предадем готовия сайт, за да го хоствате сами.',
+    },
+    {
+      q: 'Как изглежда сайтът на телефон?',
+      a: 'Всеки сайт е адаптивен — подрежда се за телефон, таблет и компютър. Проверяваме го на различни размери, преди да го пуснем.',
+    },
+    {
+      q: 'Колко струва един сайт?',
+      a: 'Цената зависи от обхвата. Разкажете ни какво ви трябва — уточняваме заедно и ви изпращаме конкретна оферта.',
+    },
+  ],
+}
+
+export const cta = {
+  title: 'Имате идея за сайт?',
+  text: 'Разкажете ни накратко — ще ви отговорим с въпроси или с конкретна оферта.',
+  button: 'Заяви оферта',
+}
+
 export const contact = {
-  eyebrow: '06 — Контакт',
+  eyebrow: '07 — Контакт',
   title: 'Да направим вашия сайт',
   intro: 'Разкажете ни накратко за проекта. Ще ви отговорим с въпроси или с оферта.',
   about: 'Зад aecodezonebg сме Алекс и Емо — студенти в ТУ-Варна.',
@@ -265,7 +326,12 @@ export const contact = {
 }
 
 export const footer = {
-  tagline: 'Уеб сайтове на React.',
+  tagline: 'Уеб студио за каталожни и бизнес сайтове на React — с админ панел, хостинг и поддръжка.',
+  navTitle: 'Навигация',
+  servicesTitle: 'Услуги',
+  services: ['Каталожни сайтове', 'Бизнес сайтове', 'Админ панел (CMS)', 'Хостинг и поддръжка'],
+  contactTitle: 'Контакт',
+  contactCta: 'Изпратете запитване',
   wordmark: 'aecodezonebg',
   techLabel: 'С какво работим',
   copyright: 'aecodezonebg © 2026',
