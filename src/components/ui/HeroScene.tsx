@@ -243,13 +243,13 @@ export function HeroScene({ play }: { play: boolean }) {
             <span className="h-2 w-2 rounded-full bg-cyan" />
             <span className="font-mono text-[0.7rem] text-ink-muted">{scene.file}</span>
           </div>
-          <pre className="min-h-[13rem] overflow-hidden px-4 py-4 font-mono text-[0.7rem] leading-[1.95] sm:min-h-[17rem] sm:text-[0.8rem]">
+          <pre className="min-h-[9rem] overflow-hidden px-4 py-4 font-mono text-[0.62rem] leading-[1.95] sm:min-h-[17rem] sm:text-[0.8rem]">
             {lines.map((l, i) => {
               if (i > pos.line) return null
               const chars = i < pos.line ? Infinity : pos.char
               return (
                 <div key={i} className="flex whitespace-pre">
-                  <span className="mr-4 w-4 shrink-0 select-none text-right text-ink-faint/50">{i + 1}</span>
+                  <span className="mr-3 w-3 shrink-0 sm:mr-4 sm:w-4 select-none text-right text-ink-faint/50">{i + 1}</span>
                   <code>
                     <CodeLine tokens={l.tokens} chars={chars} />
                     {i === Math.min(pos.line, lines.length - 1) && !done && (

@@ -37,7 +37,7 @@ export function Hero({ ready }: { ready: boolean }) {
     <section
       id="top"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden pb-20 pt-[calc(var(--header-h)+3.5rem)] sm:pb-28 sm:pt-[calc(var(--header-h)+5rem)]"
+      className="relative overflow-hidden pb-16 pt-[calc(var(--header-h)+3rem)] sm:pb-24 sm:pt-[calc(var(--header-h)+5rem)]"
     >
       <CursorGrid />
 
@@ -66,12 +66,12 @@ export function Hero({ ready }: { ready: boolean }) {
           {hero.subtitle}
         </m.p>
 
-        <m.div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:gap-4" {...fadeUp(0.75)}>
-          <MagneticButton href="#proekti" onClick={go('proekti')}>
+        <m.div className="mt-10 flex w-full max-w-xs flex-col items-center gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4" {...fadeUp(0.75)}>
+          <MagneticButton href="#kontakt" onClick={go('kontakt')} className="w-full sm:w-auto">
             {hero.primaryCta}
             <ArrowIcon className="transition-transform duration-300 ease-brand group-hover:translate-x-1" />
           </MagneticButton>
-          <MagneticButton href="#kontakt" onClick={go('kontakt')} variant="ghost">
+          <MagneticButton href="#proekti" onClick={go('proekti')} variant="ghost" className="w-full sm:w-auto">
             {hero.secondaryCta}
           </MagneticButton>
         </m.div>

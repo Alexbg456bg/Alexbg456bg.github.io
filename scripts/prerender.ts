@@ -37,7 +37,7 @@ async function main() {
     let html = template
       .replace('<div id="root">', `<div id="root" data-route="${page.url}">`)
       .replace('<!--app-html-->', render(page.url))
-    if (page.url !== '/') {
+    {
       html = html
         .replace(/<title>[^<]*<\/title>/, `<title>${escape(page.title)}</title>`)
         .replace(/(<meta\s+name="description"\s+content=")[^"]*(")/, `$1${escape(page.description)}$2`)
@@ -47,7 +47,7 @@ async function main() {
         .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${canonical}$2`)
     }
     if (page.url === '/404') html = html.replace('</head>', '<meta name="robots" content="noindex" /></head>')
-    // Vercel serves 404.html for unknown paths.
+    // GitHub Pages and Vercel serve 404.html for unknown paths.
     const file =
       page.url === '/'
         ? resolve(dist, 'index.html')

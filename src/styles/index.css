@@ -54,6 +54,11 @@
     @apply mx-auto w-full max-w-content px-4 sm:px-8 lg:px-12;
   }
 
+  /* One vertical rhythm for every section. */
+  .section {
+    @apply relative py-16 sm:py-24;
+  }
+
   .eyebrow {
     @apply font-mono text-xs font-medium uppercase tracking-[0.18em] text-cyan;
   }

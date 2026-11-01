@@ -249,6 +249,12 @@ function ContactForm() {
                 </m.p>
               )}
             </AnimatePresence>
+            <p className="-mt-1 flex items-start gap-2 text-sm text-ink-faint">
+              <svg viewBox="0 0 16 16" className="mt-0.5 h-4 w-4 shrink-0 text-cyan" aria-hidden="true">
+                <path d="M4 7V5a4 4 0 1 1 8 0v2M3.5 7h9v7h-9z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+              </svg>
+              {t.privacy}
+            </p>
             {/* Spam trap for Formspree; hidden from people and assistive tech. */}
             <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
@@ -286,12 +292,11 @@ function ContactForm() {
 export function Contact() {
   const { email, phone } = siteConfig.contact
   return (
-    <section id="kontakt" aria-labelledby="kontakt-title" className="relative overflow-hidden py-24 sm:py-32 lg:py-40">
+    <section id="kontakt" aria-labelledby="kontakt-title" className="section">
       <div className="container-x relative grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
         <div>
           <SectionHeader id="kontakt-title" eyebrow={contact.eyebrow} title={contact.title} intro={contact.intro} />
           <FadeIn delay={0.2}>
-            <p className="mt-8 max-w-md text-pretty text-ink-muted">{contact.about}</p>
             {(email || phone) && (
               <dl className="mt-10 grid gap-5">
                 {email && (

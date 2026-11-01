@@ -3,13 +3,12 @@
 
 export const siteConfig = {
   name: 'aecodezonebg',
-  // TODO: production domain (used for canonical URL, Open Graph and sitemap.xml).
-  url: 'https://aecodezonebg.example',
+  // Production address (canonical URL, Open Graph, sitemap.xml). Update if a custom domain is added.
+  url: 'https://alexbg456bg.github.io',
   locale: 'bg_BG',
 
   contact: {
-    // TODO: public contact e-mail.
-    email: null as string | null,
+    email: 'aecodezonebg@gmail.com' as string | null,
     // TODO: public phone number, in international format (+359...).
     phone: null as string | null,
   },

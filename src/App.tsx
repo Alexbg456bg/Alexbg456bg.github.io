@@ -9,15 +9,15 @@ import { useReducedMotion } from './lib/media'
 import { useIntroReady } from './lib/preloader'
 import { SmoothScrollProvider } from './lib/smooth-scroll'
 import { CaseStudy } from './sections/CaseStudy'
+import { About } from './sections/About'
 import { Contact } from './sections/Contact'
-import { CtaBand } from './sections/CtaBand'
 import { Faq } from './sections/Faq'
-import { Features } from './sections/Features'
 import { Footer } from './sections/Footer'
 import { Header } from './sections/Header'
 import { Hero } from './sections/Hero'
 import { NotFound } from './sections/NotFound'
 import { Portfolio } from './sections/Portfolio'
+import { Pricing } from './sections/Pricing'
 import { Process } from './sections/Process'
 import { Services } from './sections/Services'
 
@@ -55,11 +55,11 @@ export default function App() {
                 <Header />
                 <main id="main" tabIndex={-1} className="outline-none">
                   <Hero ready={ready} />
-                  <Features />
                   <Portfolio />
-                  <CtaBand />
                   <Services />
+                  <Pricing />
                   <Process />
+                  <About />
                   <Faq />
                   <Contact />
                 </main>

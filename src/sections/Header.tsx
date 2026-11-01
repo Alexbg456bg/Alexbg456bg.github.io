@@ -93,7 +93,7 @@ export function Header() {
 
         <div className="hidden md:block">
           <MagneticButton href="#kontakt" onClick={go('kontakt')} className="!min-h-10 !px-5 !py-2 text-sm">
-            {hero.secondaryCta}
+            {hero.primaryCta}
           </MagneticButton>
         </div>
 

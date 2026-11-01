@@ -41,7 +41,22 @@ function ProjectText({ project, index }: { project: Project; index: number }) {
       <h3 id={`p-${project.slug}`} className="mt-5 text-[clamp(2rem,4vw,3.75rem)] font-bold leading-[1.02] tracking-tight">
         {project.title}
       </h3>
-      <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-ink-muted">{project.summary}</p>
+      <dl className="mt-6 grid max-w-md gap-4">
+        {(
+          [
+            [portfolio.clientLabel, project.client],
+            [portfolio.taskLabel, project.task],
+            [portfolio.doneLabel, project.done],
+          ] as const
+        ).map(([label, value]) =>
+          value ? (
+            <div key={label}>
+              <dt className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-ink-faint">{label}</dt>
+              <dd className="mt-1 text-pretty leading-relaxed text-ink-muted">{value}</dd>
+            </div>
+          ) : null,
+        )}
+      </dl>
       <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
         <MagneticButton href={project.url} target="_blank" strength={0.25}>
           {portfolio.openSite}
@@ -141,7 +156,7 @@ export function Portfolio() {
 
   if (!pinned) {
     return (
-      <section ref={section} id="proekti" aria-labelledby="proekti-title" className="relative py-24 sm:py-32">
+      <section ref={section} id="proekti" aria-labelledby="proekti-title" className="section">
         <div className="container-x">
           <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} intro={portfolio.intro} />
           <ul className="mt-14 grid gap-20 sm:mt-20 sm:gap-28">
@@ -168,7 +183,7 @@ export function Portfolio() {
       <div ref={stage} className="container-x grid h-full grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-center gap-16 py-24">
         <div>
           <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} />
-          <div className="relative mt-12 min-h-[19rem]">
+          <div className="relative mt-10 min-h-[24rem]">
             <AnimatePresence mode="wait" initial={false}>
               <m.div
                 key={project.slug}

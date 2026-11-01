@@ -48,7 +48,7 @@ export function Services() {
   }
 
   return (
-    <section id="uslugi" aria-labelledby="uslugi-title" className="relative py-24 sm:py-32 lg:py-40">
+    <section id="uslugi" aria-labelledby="uslugi-title" className="section">
       <div className="container-x">
         <SectionHeader id="uslugi-title" eyebrow={c.eyebrow} title={c.title} intro={c.intro} split />
 

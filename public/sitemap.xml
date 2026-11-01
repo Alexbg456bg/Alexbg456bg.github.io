@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: replace https://aecodezonebg.example with the real domain. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://aecodezonebg.example/</loc></url>
-  <url><loc>https://aecodezonebg.example/proekti/balgaria</loc></url>
-  <url><loc>https://aecodezonebg.example/proekti/pestguard-pro</loc></url>
-  <url><loc>https://aecodezonebg.example/proekti/adrina</loc></url>
-  <url><loc>https://aecodezonebg.example/proekti/korporacia-x</loc></url>
+  <url><loc>https://alexbg456bg.github.io/</loc></url>
+  <url><loc>https://alexbg456bg.github.io/proekti/balgaria</loc></url>
+  <url><loc>https://alexbg456bg.github.io/proekti/pestguard-pro</loc></url>
+  <url><loc>https://alexbg456bg.github.io/proekti/adrina</loc></url>
+  <url><loc>https://alexbg456bg.github.io/proekti/korporacia-x</loc></url>
 </urlset>
