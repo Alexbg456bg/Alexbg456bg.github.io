@@ -1,59 +1,93 @@
-import { useEffect, useRef } from 'react'
+import { AnimatePresence, m } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import live from '../generated/live.json'
 import { Bracket } from '../components/brand/Logo'
-import { ArrowIcon } from '../components/ui/MagneticButton'
-import { ProjectShot } from '../components/ui/ProjectShot'
+import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
+import { ProjectShot, projectImage } from '../components/ui/ProjectShot'
+import { ProjectVideo } from '../components/ui/ProjectVideo'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { cursor, portfolio, ui, type Project } from '../content'
 import { useMinWidth, useReducedMotion } from '../lib/media'
+import { easeBrand } from '../lib/motion'
 import { useSmoothScroll } from '../lib/smooth-scroll'
 
-function ProjectText({ project, index }: { project: Project; index: number }) {
-  const total = String(portfolio.items.length).padStart(2, '0')
+const isLive = (slug: string) => (live as Record<string, boolean>)[slug] === true
+const pad = (n: number) => String(n).padStart(2, '0')
+
+function LiveDot({ slug }: { slug: string }) {
+  if (!isLive(slug)) return null
   return (
-    <div className="flex flex-col">
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
-        <span className="text-cyan">{String(index + 1).padStart(2, '0')}</span> / {total} · {project.category}
-      </p>
-      <h3 id={`p-${project.slug}`} className="mt-4 text-[clamp(1.75rem,3.2vw,3rem)] font-bold leading-[1.05] tracking-tight">{project.title}</h3>
-      <p className="mt-4 max-w-md text-pretty leading-relaxed text-ink-muted">{project.summary}</p>
-      <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-        <Link
-          to={`/proekti/${project.slug}`}
-          className="group inline-flex items-center gap-2 font-semibold text-cyan"
-        >
+    <span className="inline-flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-ink-muted">
+      <span className="relative flex h-2 w-2">
+        <span className="animate-pulse-ring absolute inset-0 rounded-full bg-cyan" />
+        <span className="relative h-2 w-2 rounded-full bg-cyan" />
+      </span>
+      {portfolio.live}
+    </span>
+  )
+}
+
+function ProjectText({ project, index }: { project: Project; index: number }) {
+  return (
+    <div>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
+          <span className="text-cyan">{pad(index + 1)}</span> / {pad(portfolio.items.length)} · {project.category}
+        </p>
+        <LiveDot slug={project.slug} />
+      </div>
+      <h3 id={`p-${project.slug}`} className="mt-5 text-[clamp(2rem,4vw,3.75rem)] font-bold leading-[1.02] tracking-tight">
+        {project.title}
+      </h3>
+      <p className="mt-5 max-w-md text-pretty text-lg leading-relaxed text-ink-muted">{project.summary}</p>
+      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+        <MagneticButton href={project.url} target="_blank" strength={0.25}>
+          {portfolio.openSite}
+          <ArrowIcon className="-rotate-45" />
+          <span className="sr-only">{ui.newTab}</span>
+        </MagneticButton>
+        <Link to={`/proekti/${project.slug}`} className="group inline-flex items-center gap-2 font-semibold text-ink-muted hover:text-cyan">
           <Bracket side="left" strokeWidth={70} className="h-3 w-auto transition-transform duration-300 ease-brand group-hover:-translate-x-1" />
           {portfolio.viewCase}
           <Bracket side="right" strokeWidth={70} className="h-3 w-auto transition-transform duration-300 ease-brand group-hover:translate-x-1" />
         </Link>
-        <a
-          href={project.url}
-          target="_blank"
-          rel="noopener"
-          className="group inline-flex items-center gap-2 font-medium text-ink-muted transition-colors hover:text-ink"
-        >
-          {portfolio.openSite}
-          <ArrowIcon className="-rotate-45 transition-transform duration-300 ease-brand group-hover:translate-x-0.5" />
-          <span className="sr-only">{ui.newTab}</span>
-        </a>
       </div>
     </div>
   )
 }
 
 /**
- * Desktop: the section pins and the projects scroll sideways, one per screen (GSAP ScrollTrigger,
- * loaded on demand). Mobile, tablet and reduced motion: a plain vertical list.
+ * Signature moment 2. Desktop: the section pins and one laptop + phone frame stays put while
+ * the projects wipe into it one by one (transform-only wipe, scrubbed by GSAP ScrollTrigger),
+ * with the text beside it changing. Each project plays a scroll-through recording of the live
+ * site. Phones, tablets and reduced motion get a plain list.
  */
 export function Portfolio() {
   const section = useRef<HTMLElement>(null)
-  const track = useRef<HTMLDivElement>(null)
-  const progress = useRef<HTMLSpanElement>(null)
+  const stage = useRef<HTMLDivElement>(null)
   const scroll = useSmoothScroll()
   const wide = useMinWidth(1024)
   const reduced = useReducedMotion()
   const pinned = wide && !reduced
+  const [active, setActive] = useState(0)
+  const [near, setNear] = useState(false)
+  const [visible, setVisible] = useState(false)
+
+  // Load videos only once the section is close, play only while it is on screen.
+  useEffect(() => {
+    if (!pinned || !section.current) return
+    const el = section.current
+    const nearObs = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '100% 0px' })
+    const visObs = new IntersectionObserver(([e]) => setVisible(e.isIntersecting))
+    nearObs.observe(el)
+    visObs.observe(el)
+    return () => {
+      nearObs.disconnect()
+      visObs.disconnect()
+    }
+  }, [pinned])
 
   useEffect(() => {
     if (!pinned) return
@@ -62,35 +96,34 @@ export function Portfolio() {
 
     void (async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')])
-      if (cancelled || !section.current || !track.current) return
+      if (cancelled || !section.current || !stage.current) return
       gsap.registerPlugin(ScrollTrigger)
       const off = scroll.onScroll(() => ScrollTrigger.update())
-      const el = track.current
-      const distance = () => el.scrollWidth - window.innerWidth
+      const n = portfolio.items.length
       const ctx = gsap.context(() => {
-        const slide = gsap.to(el, {
-          x: () => -distance(),
-          ease: 'none',
+        const tl = gsap.timeline({
+          defaults: { ease: 'power2.inOut', duration: 0.7 },
           scrollTrigger: {
             trigger: section.current,
             start: 'top top',
-            end: () => `+=${distance()}`,
+            end: () => `+=${window.innerHeight * (n - 1) * 0.9}`,
             pin: true,
-            scrub: 0.8,
+            scrub: 0.6,
             invalidateOnRefresh: true,
             anticipatePin: 1,
-            onUpdate: (self) => {
-              if (progress.current) progress.current.style.transform = `scaleX(${self.progress})`
-            },
+            onUpdate: (self) => setActive(Math.min(n - 1, Math.round(self.progress * (n - 1)))),
           },
         })
-        // Inside the horizontal track: screenshots drift against the movement, numbers with it.
-        el.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
-          const trigger = { trigger: panel, containerAnimation: slide, start: 'left right', end: 'right left', scrub: true }
-          gsap.fromTo(panel.querySelector('[data-parallax]'), { x: 90 }, { x: -90, ease: 'none', scrollTrigger: trigger })
-          gsap.fromTo(panel.querySelector('[data-number]'), { x: -160 }, { x: 160, ease: 'none', scrollTrigger: trigger })
-        })
-      }, section)
+        // Layer i wipes in from below: the window moves up while its content moves down
+        // by the same amount, so the picture itself stays still.
+        for (let i = 1; i < n; i++) {
+          const at = i - 1 + 0.15
+          // y: 0 clears the pre-hydration Tailwind offset, which GSAP would otherwise read as extra pixels.
+          tl.fromTo(`[data-layer="${i}"]`, { y: 0, yPercent: 100 }, { y: 0, yPercent: 0 }, at)
+          tl.fromTo(`[data-layer="${i}"] > [data-inner]`, { y: 0, yPercent: -100 }, { y: 0, yPercent: 0 }, at)
+        }
+        tl.to({}, { duration: 0.15 }, n - 1)
+      }, stage)
 
       cleanup = () => {
         off()
@@ -104,72 +137,19 @@ export function Portfolio() {
     }
   }, [scroll, pinned])
 
-  return (
-    <section
-      ref={section}
-      id="proekti"
-      aria-labelledby="proekti-title"
-      className={`relative overflow-hidden ${pinned ? 'h-[100svh]' : ''}`}
-    >
-      {pinned ? (
-        <>
-          <div ref={track} className="flex h-full w-max items-center">
-            <div className="flex h-full w-[38vw] shrink-0 flex-col justify-center pl-12 pr-8 xl:pl-[max(3rem,calc((100vw-84rem)/2+3rem))]">
-              <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} intro={portfolio.intro} />
-            </div>
-            {portfolio.items.map((p, i) => (
-              <article
-                key={p.slug}
-                data-panel
-                aria-labelledby={`p-${p.slug}`}
-                className="relative grid h-full w-[86vw] shrink-0 grid-cols-[minmax(0,7fr)_minmax(0,4fr)] items-center gap-12 px-12 xl:w-[80vw]"
-              >
-                <span
-                  data-number
-                  className="text-outline pointer-events-none absolute -top-[0.08em] right-[6%] select-none font-mono text-[clamp(10rem,24vw,24rem)] font-medium leading-none opacity-60"
-                  aria-hidden="true"
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <Link
-                  to={`/proekti/${p.slug}`}
-                  tabIndex={-1}
-                  aria-hidden="true"
-                  data-cursor="view"
-                  data-cursor-label={cursor.view}
-                  className="group relative block"
-                >
-                  <div data-parallax>
-                    <ProjectShot project={p} className="transition-transform duration-700 ease-brand group-hover:scale-[1.02]" />
-                  </div>
-                </Link>
-                <div className="relative">
-                  <ProjectText project={p} index={i} />
-                </div>
-              </article>
-            ))}
-            <div className="w-[8vw] shrink-0" aria-hidden="true" />
-          </div>
-          <div className="absolute inset-x-12 bottom-10 h-px bg-line" aria-hidden="true">
-            <span ref={progress} className="block h-full origin-left scale-x-0 bg-cyan" />
-          </div>
-        </>
-      ) : (
-        <div className="container-x py-24 sm:py-32">
+  const project = portfolio.items[active]
+
+  if (!pinned) {
+    return (
+      <section ref={section} id="proekti" aria-labelledby="proekti-title" className="relative py-24 sm:py-32">
+        <div className="container-x">
           <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} intro={portfolio.intro} />
           <ul className="mt-14 grid gap-20 sm:mt-20 sm:gap-28">
             {portfolio.items.map((p, i) => (
               <li key={p.slug}>
                 <article aria-labelledby={`p-${p.slug}`}>
-                  <FadeIn className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:gap-14">
-                    <Link
-                      to={`/proekti/${p.slug}`}
-                      tabIndex={-1}
-                      aria-hidden="true"
-                      data-cursor="view"
-                      data-cursor-label={cursor.view}
-                      className="block"
-                    >
+                  <FadeIn className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+                    <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="block">
                       <ProjectShot project={p} />
                     </Link>
                     <ProjectText project={p} index={i} />
@@ -179,7 +159,102 @@ export function Portfolio() {
             ))}
           </ul>
         </div>
-      )}
+      </section>
+    )
+  }
+
+  return (
+    <section ref={section} id="proekti" aria-labelledby="proekti-title" className="relative h-[100svh] overflow-hidden">
+      <div ref={stage} className="container-x grid h-full grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-center gap-16 py-24">
+        <div>
+          <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} />
+          <div className="relative mt-12 min-h-[19rem]">
+            <AnimatePresence mode="wait" initial={false}>
+              <m.div
+                key={project.slug}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.45, ease: easeBrand }}
+              >
+                <ProjectText project={project} index={active} />
+              </m.div>
+            </AnimatePresence>
+          </div>
+          <div className="mt-8 flex items-center gap-2" aria-hidden="true">
+            {portfolio.items.map((p, i) => (
+              <span key={p.slug} className="h-[3px] w-10 overflow-hidden rounded-full bg-ink/15">
+                <m.span
+                  className="block h-full origin-left bg-cyan"
+                  animate={{ scaleX: i <= active ? 1 : 0 }}
+                  transition={{ duration: 0.5, ease: easeBrand }}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative pb-10 pr-8">
+          <Link
+            to={`/proekti/${project.slug}`}
+            tabIndex={-1}
+            aria-hidden="true"
+            data-cursor="view"
+            data-cursor-label={cursor.view}
+            className="block"
+          >
+            <div className="glass-border overflow-hidden rounded-2xl bg-navy-850 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.9)]">
+              <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
+                <span className="flex gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                </span>
+                <span className="mx-auto rounded-full bg-navy-950/70 px-4 py-1 font-mono text-[0.7rem] text-ink-muted">
+                  {project.host}
+                </span>
+              </div>
+              <div className="relative aspect-[16/10] overflow-hidden bg-navy-950">
+                {portfolio.items.map((p, i) => (
+                  <div
+                    key={p.slug}
+                    data-layer={i}
+                    className={`absolute inset-0 overflow-hidden ${i > 0 ? 'translate-y-full' : ''}`}
+                  >
+                    <div data-inner className={`h-full w-full ${i > 0 ? '-translate-y-full' : ''}`}>
+                      <ProjectVideo project={p} load={near} playing={visible && i === active} reduced={reduced} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Link>
+
+          <div className="absolute -bottom-2 right-0 w-[24%] overflow-hidden rounded-[1.6rem] border-[5px] border-navy-700 bg-navy-950 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]">
+            <div className="relative aspect-[9/19] overflow-hidden">
+              {portfolio.items.map((p, i) => (
+                <div
+                  key={p.slug}
+                  data-layer={i}
+                  className={`absolute inset-0 overflow-hidden ${i > 0 ? 'translate-y-full' : ''}`}
+                >
+                  <div data-inner className={`h-full w-full ${i > 0 ? '-translate-y-full' : ''}`}>
+                    <img
+                      src={projectImage(p, 'mobile')}
+                      width={600}
+                      height={1299}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }

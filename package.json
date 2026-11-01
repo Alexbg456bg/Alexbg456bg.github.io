@@ -5,13 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && tsx scripts/prerender.ts",
+    "build": "tsx scripts/check-live.ts && tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && tsx scripts/prerender.ts",
     "preview": "vite preview",
     "screenshots": "tsx scripts/screenshots.ts",
     "shots:review": "tsx scripts/review-shots.ts",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
     "brand": "tsx scripts/brand-assets.ts",
-    "lighthouse": "tsx scripts/lighthouse.ts"
+    "lighthouse": "tsx scripts/lighthouse.ts",
+    "videos": "tsx scripts/videos.ts",
+    "check-live": "tsx scripts/check-live.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

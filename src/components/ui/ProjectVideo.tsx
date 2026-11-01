@@ -1,0 +1,64 @@
+import { useEffect, useRef } from 'react'
+import videos from '../../generated/videos.json'
+import type { Project } from '../../content'
+import { projectImage } from './ProjectShot'
+
+const manifest = videos as Record<string, { video: string } | null>
+
+/**
+ * Scroll-through recording of a live project. Loads nothing until `load` turns true,
+ * plays only while `playing`. Without a recording (or with reduced motion), the
+ * screenshot slowly pans instead — transform only.
+ */
+export function ProjectVideo({
+  project,
+  load,
+  playing,
+  reduced,
+}: {
+  project: Project
+  load: boolean
+  playing: boolean
+  reduced: boolean
+}) {
+  const ref = useRef<HTMLVideoElement>(null)
+  const entry = manifest[project.slug]
+  const poster = projectImage(project, 'desktop', 960)
+
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    if (playing && load) void v.play().catch(() => undefined)
+    else v.pause()
+  }, [playing, load])
+
+  if (!entry || reduced) {
+    return (
+      <img
+        src={poster}
+        srcSet={`${poster} 960w, ${projectImage(project, 'desktop')} 1440w`}
+        sizes="(min-width: 1024px) 55vw, 92vw"
+        width={1440}
+        height={900}
+        alt={project.alt}
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover object-top"
+      />
+    )
+  }
+
+  return (
+    <video
+      ref={ref}
+      src={load ? entry.video : undefined}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-label={project.alt}
+      className="h-full w-full object-cover object-top"
+    />
+  )
+}

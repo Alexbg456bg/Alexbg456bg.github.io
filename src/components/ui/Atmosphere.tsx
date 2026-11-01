@@ -1,12 +1,14 @@
 import type { CSSProperties, ReactNode } from 'react'
 
-/** Slow-moving cyan/navy glow. Radial gradients (no blur filter), animated with transform only. */
-export function Aurora({ className = '' }: { className?: string }) {
+/**
+ * Static gradient mesh behind the whole page: navy and cyan only, very low contrast,
+ * plus a faint grid. Painted once; nothing animates.
+ */
+export function GradientMesh() {
   return (
-    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
-      <div className="animate-aurora-1 absolute -left-[20%] -top-[30%] h-[80vmax] w-[80vmax] rounded-full bg-[radial-gradient(circle,rgba(0,194,255,0.16),transparent_60%)]" />
-      <div className="animate-aurora-2 absolute -right-[25%] top-[10%] h-[70vmax] w-[70vmax] rounded-full bg-[radial-gradient(circle,rgba(27,58,102,0.75),transparent_62%)]" />
-      <div className="animate-aurora-3 absolute bottom-[-40%] left-[20%] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(0,194,255,0.08),transparent_60%)]" />
+    <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
+      <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_15%_0%,rgba(0,194,255,0.10),transparent_70%),radial-gradient(50%_60%_at_100%_30%,rgba(27,58,102,0.55),transparent_70%),radial-gradient(60%_50%_at_30%_100%,rgba(19,45,84,0.6),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(163,181,202,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(163,181,202,0.035)_1px,transparent_1px)] bg-[size:96px_96px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
     </div>
   )
 }

@@ -6,3 +6,4 @@ dist
 .lighthouse
 .review
 dist-ssr
+.video-tmp

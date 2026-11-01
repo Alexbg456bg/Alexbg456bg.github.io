@@ -4,8 +4,18 @@
 export type NavItem = { id: string; label: string }
 
 export const nav: NavItem[] = [
-  { id: 'uslugi', label: 'Услуги' },
   { id: 'proekti', label: 'Проекти' },
+  { id: 'uslugi', label: 'Услуги' },
+  { id: 'proces', label: 'Процес' },
+  { id: 'kontakt', label: 'Контакт' },
+]
+
+/** Sections in page order, for the side progress indicator (01–06). */
+export const sections: NavItem[] = [
+  { id: 'top', label: 'Начало' },
+  { id: 'nashi-proekti', label: 'Нашите проекти' },
+  { id: 'proekti', label: 'Портфолио' },
+  { id: 'uslugi', label: 'Услуги' },
   { id: 'proces', label: 'Процес' },
   { id: 'kontakt', label: 'Контакт' },
 ]
@@ -16,6 +26,10 @@ export const meta = {
     'Уеб студио aecodezonebg: изработка на каталожни и бизнес сайтове на React, по желание с админ панел, хостинг и месечна поддръжка.',
 }
 
+export type CodeToken = { t: string; c: 'kw' | 'fn' | 'tag' | 'attr' | 'str' | 'p' | 'txt' }
+/** What a finished code line adds to the preview page next to it. */
+export type BuildPart = 'page' | 'header' | 'hero' | 'cards' | 'button' | 'done'
+
 export const hero = {
   eyebrow: 'уеб студио',
   titleLines: ['Правим сайтове,', 'които работят.'],
@@ -23,75 +37,43 @@ export const hero = {
     'Каталожни и бизнес сайтове на React — с админ панел, ако ви трябва, хостинг и поддръжка след пускането.',
   primaryCta: 'Виж проектите',
   secondaryCta: 'Заяви оферта',
-  scrollHint: 'Скролни надолу',
-  showcase: {
-    live: 'На живо',
+  scene: {
     file: 'Сайт.tsx',
-    // Illustrative JSX shown typing in the hero editor. Not real code from a project.
+    url: 'вашият-сайт.bg',
+    // Illustrative code: each finished line "builds" a part of the preview page.
+    // The preview text below is a mock-up, not a real client.
     code: [
-      [{ t: '<', c: 'b' }, { t: 'Сайт', c: 'tag' }, { t: ' клиент', c: 'attr' }, { t: '=', c: 'p' }, { t: '"вашата фирма"', c: 'str' }, { t: '>', c: 'b' }],
-      [{ t: '  <', c: 'b' }, { t: 'Дизайн', c: 'tag' }, { t: ' уникален', c: 'attr' }, { t: ' />', c: 'b' }],
-      [{ t: '  <', c: 'b' }, { t: 'Анимации', c: 'tag' }, { t: ' плавни', c: 'attr' }, { t: ' />', c: 'b' }],
-      [{ t: '  <', c: 'b' }, { t: 'Адаптивен', c: 'tag' }, { t: ' телефон таблет', c: 'attr' }, { t: ' />', c: 'b' }],
-      [{ t: '  <', c: 'b' }, { t: 'АдминПанел', c: 'tag' }, { t: ' />', c: 'b' }],
-      [{ t: '</', c: 'b' }, { t: 'Сайт', c: 'tag' }, { t: '>', c: 'b' }],
-    ] as { t: string; c: 'b' | 'tag' | 'attr' | 'p' | 'str' }[][],
+      { build: null, tokens: [{ t: 'export default function ', c: 'kw' }, { t: 'Сайт', c: 'fn' }, { t: '() {', c: 'p' }] },
+      { build: 'page', tokens: [{ t: '  return ', c: 'kw' }, { t: '<', c: 'p' }, { t: 'Страница', c: 'tag' }, { t: '>', c: 'p' }] },
+      { build: 'header', tokens: [{ t: '    <', c: 'p' }, { t: 'Хедър', c: 'tag' }, { t: ' лого', c: 'attr' }, { t: '=', c: 'p' }, { t: '"ae"', c: 'str' }, { t: ' />', c: 'p' }] },
+      { build: 'hero', tokens: [{ t: '    <', c: 'p' }, { t: 'Заглавие', c: 'tag' }, { t: '>', c: 'p' }, { t: 'Вашият бизнес онлайн', c: 'txt' }, { t: '</', c: 'p' }, { t: 'Заглавие', c: 'tag' }, { t: '>', c: 'p' }] },
+      { build: 'cards', tokens: [{ t: '    <', c: 'p' }, { t: 'Услуги', c: 'tag' }, { t: ' брой', c: 'attr' }, { t: '={', c: 'p' }, { t: '3', c: 'str' }, { t: '} />', c: 'p' }] },
+      { build: 'button', tokens: [{ t: '    <', c: 'p' }, { t: 'Бутон', c: 'tag' }, { t: '>', c: 'p' }, { t: 'Свържете се', c: 'txt' }, { t: '</', c: 'p' }, { t: 'Бутон', c: 'tag' }, { t: '>', c: 'p' }] },
+      { build: null, tokens: [{ t: '  </', c: 'p' }, { t: 'Страница', c: 'tag' }, { t: '>', c: 'p' }] },
+      { build: 'done', tokens: [{ t: '}', c: 'p' }] },
+    ] as { build: BuildPart | null; tokens: CodeToken[] }[],
+    preview: {
+      title: 'Вашият бизнес онлайн',
+      text: 'Подреден сайт, който работи на всяко устройство.',
+      cards: ['Услуга', 'Услуга', 'Услуга'],
+      button: 'Свържете се',
+    },
   },
 }
 
-// Decorative running strip under the hero (the services, nothing more).
-export const marquee = ['Каталожни сайтове', 'Бизнес сайтове', 'Админ панел', 'Хостинг', 'Поддръжка', 'React']
-
-export const cta = {
-  lines: ['Имате идея', 'за сайт?'],
-  text: 'Разкажете ни я. Ще ви помогнем да стане сайт, с който да се гордеете.',
-  button: 'Заяви оферта',
-  ring: 'заяви оферта • заяви оферта • ',
-  strip: ['Да започнем', 'Пишете ни', 'Да направим вашия сайт'],
-}
+// Technologies we actually use (this site and the projects on Vercel). Only real ones.
+export const tech = ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Vercel']
 
 export const cursor = { view: 'Виж' }
 
+export const strip = {
+  eyebrow: '02 — Нашите проекти',
+  // "Работим с реални клиенти" is not used: not every project below is confirmed as client work.
+  title: 'Нашите проекти',
+  cta: 'Към портфолиото',
+}
+
 export type ServiceIcon = 'catalog' | 'business' | 'cms' | 'hosting'
-
-export type Service = {
-  icon: ServiceIcon
-  title: string
-  text: string
-  tag: string
-}
-
-export const services = {
-  eyebrow: '01 — Услуги',
-  title: 'Какво правим',
-  intro: 'Фокусираме се върху малко неща и ги правим добре.',
-  items: [
-    {
-      icon: 'catalog',
-      title: 'Каталожни сайтове',
-      text: 'Покажете продуктите или услугите си подредено — с категории и отделна страница за всеки артикул.',
-      tag: 'React',
-    },
-    {
-      icon: 'business',
-      title: 'Бизнес сайтове',
-      text: 'Сайт за вашата фирма: какво предлагате, кои сте и как да се свържат с вас. Добре изглежда на телефон, таблет и компютър.',
-      tag: 'React',
-    },
-    {
-      icon: 'cms',
-      title: 'Админ панел (CMS)',
-      text: 'По желание добавяме панел, през който сами променяте текстове и снимки, без да пишете код.',
-      tag: 'опция',
-    },
-    {
-      icon: 'hosting',
-      title: 'Хостинг и поддръжка',
-      text: 'Пускаме сайта онлайн и се грижим за него с месечна поддръжка.',
-      tag: 'месечно',
-    },
-  ] satisfies Service[],
-}
 
 export type Project = {
   slug: string
@@ -100,19 +82,20 @@ export type Project = {
   summary: string
   url: string
   host: string
-  // Screenshot base name in /public/projects (generated by `npm run screenshots`).
+  // Screenshot / video base name in /public/projects (generated by `npm run screenshots`).
   image: string
   alt: string
 }
 
 export const portfolio = {
-  eyebrow: '02 — Проекти',
+  eyebrow: '03 — Портфолио',
   title: 'Какво сме направили',
   intro: 'Четири сайта на живо. Отворете който и да е от тях.',
   openSite: 'Отвори сайта',
   viewCase: 'Разгледай проекта',
   close: 'Затвори',
   next: 'Следващ проект',
+  live: 'Жив сайт',
   desktopLabel: 'Десктоп',
   mobileLabel: 'Мобилен',
   items: [
@@ -131,8 +114,7 @@ export const portfolio = {
       slug: 'pestguard-pro',
       title: 'PestGuard Pro',
       category: 'ДДД услуги',
-      summary:
-        'Сайт на PestGuard Pro ЕООД — ДДД услуги във Велинград, Сърница, Доспат и Гоце Делчев.',
+      summary: 'Сайт на PestGuard Pro ЕООД — ДДД услуги във Велинград, Сърница, Доспат и Гоце Делчев.',
       url: 'https://pestguardpro1.com/',
       host: 'pestguardpro1.com',
       image: 'pestguard-pro',
@@ -161,8 +143,89 @@ export const portfolio = {
   ] satisfies Project[],
 }
 
+export type ConfigOption = { id: string; title: string; text: string; icon: ServiceIcon; includes: string[] }
+export type ConfigStep = { id: string; question: string; options: ConfigOption[] }
+
+/** "Какъв сайт ви трябва?" — only the confirmed services, no prices. */
+export const configurator = {
+  eyebrow: '04 — Услуги',
+  title: 'Какъв сайт ви трябва?',
+  intro: 'Изберете с няколко клика. Ще видите какво включва сайтът и ще ни изпратите заявката.',
+  base: ['Сайт на React', 'Добре изглежда на телефон, таблет и компютър'],
+  includesTitle: 'Вашият сайт включва',
+  stepLabel: 'Стъпка',
+  back: 'Назад',
+  restart: 'Започни отначало',
+  summaryTitle: 'Готово',
+  summaryText: 'Изпратете заявката и ще ви отговорим с въпроси или с оферта.',
+  submit: 'Изпрати заявката',
+  messageIntro: 'Здравейте! Интересува ме сайт със следното:',
+  steps: [
+    {
+      id: 'type',
+      question: 'Какъв тип сайт?',
+      options: [
+        {
+          id: 'catalog',
+          title: 'Каталожен сайт',
+          text: 'Продукти или услуги, подредени в категории, с отделна страница за всеки артикул.',
+          icon: 'catalog',
+          includes: ['Категории и страница за всеки артикул'],
+        },
+        {
+          id: 'business',
+          title: 'Бизнес сайт',
+          text: 'Какво предлагате, кои сте и как да се свържат с вас.',
+          icon: 'business',
+          includes: ['Страници за услугите, за вас и за контакт'],
+        },
+      ],
+    },
+    {
+      id: 'cms',
+      question: 'Искате ли сами да променяте съдържанието?',
+      options: [
+        {
+          id: 'cms-yes',
+          title: 'Да, с админ панел',
+          text: 'Панел (CMS), през който сами сменяте текстове и снимки, без код.',
+          icon: 'cms',
+          includes: ['Админ панел (CMS) за текстове и снимки'],
+        },
+        {
+          id: 'cms-no',
+          title: 'Не, засега не',
+          text: 'Промените по съдържанието ги правим ние.',
+          icon: 'business',
+          includes: [],
+        },
+      ],
+    },
+    {
+      id: 'care',
+      question: 'Хостинг и поддръжка?',
+      options: [
+        {
+          id: 'care-yes',
+          title: 'Да, погрижете се',
+          text: 'Пускаме сайта онлайн и го поддържаме всеки месец.',
+          icon: 'hosting',
+          includes: ['Хостинг', 'Месечна поддръжка'],
+        },
+        {
+          id: 'care-no',
+          title: 'Само изработка',
+          text: 'Получавате готовия сайт и го хоствате сами.',
+          icon: 'catalog',
+          includes: [],
+        },
+      ],
+    },
+  ] satisfies ConfigStep[],
+}
+
 export const process = {
-  eyebrow: '03 — Процес',
+  eyebrow: '05 — Процес',
   title: 'Как работим',
   steps: [
     { title: 'Запитване', text: 'Пишете ни какво ви трябва. Няколко изречения са достатъчни за начало.' },
@@ -174,7 +237,7 @@ export const process = {
 }
 
 export const contact = {
-  eyebrow: '04 — Контакт',
+  eyebrow: '06 — Контакт',
   title: 'Да направим вашия сайт',
   intro: 'Разкажете ни накратко за проекта. Ще ви отговорим с въпроси или с оферта.',
   about: 'Зад aecodezonebg сме Алекс и Емо — студенти в ТУ-Варна.',
@@ -182,17 +245,15 @@ export const contact = {
   phoneLabel: 'Телефон',
   form: {
     name: 'Име',
-    namePlaceholder: 'Как да ви наричаме',
     email: 'Имейл',
-    emailPlaceholder: 'name@example.com',
     message: 'Съобщение',
-    messagePlaceholder: 'Какъв сайт ви трябва?',
     submit: 'Изпрати запитването',
     sending: 'Изпращане…',
     success: 'Благодарим! Получихме съобщението ви и ще отговорим скоро.',
     error: 'Нещо се обърка при изпращането. Опитайте отново след малко.',
     notConfigured: 'Формата още не е свързана. Моля, опитайте по-късно.',
     again: 'Изпрати ново съобщение',
+    prefilled: 'Попълнихме съобщението с избора ви. Можете да го допълните.',
     errors: {
       nameRequired: 'Моля, въведете име.',
       emailRequired: 'Моля, въведете имейл.',
@@ -206,8 +267,15 @@ export const contact = {
 export const footer = {
   tagline: 'Уеб сайтове на React.',
   wordmark: 'aecodezonebg',
+  techLabel: 'С какво работим',
   copyright: 'aecodezonebg © 2026',
   toTop: 'Към началото',
+}
+
+export const notFound = {
+  title: 'Тази страница я няма',
+  text: 'Може адресът да е сгрешен или страницата да е преместена.',
+  home: 'Към началото',
 }
 
 export const ui = {
@@ -216,6 +284,7 @@ export const ui = {
   closeMenu: 'Затвори менюто',
   mainNav: 'Основна навигация',
   footerNav: 'Навигация в долната част',
+  sectionNav: 'Секции на страницата',
   home: 'aecodezonebg — към началото',
   preloaderSkip: 'Пропусни',
   newTab: '(отваря се в нов раздел)',

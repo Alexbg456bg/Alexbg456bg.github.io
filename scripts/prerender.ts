@@ -23,6 +23,7 @@ const pages: Page[] = [
     title: `${p.title} — ${portfolio.title} | aecodezonebg`,
     description: p.summary,
   })),
+  { url: '/404', title: '404 — aecodezonebg', description: meta.description },
 ]
 
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
@@ -33,7 +34,9 @@ async function main() {
 
   for (const page of pages) {
     const canonical = new URL(page.url, siteConfig.url).href
-    let html = template.replace('<!--app-html-->', render(page.url))
+    let html = template
+      .replace('<div id="root">', `<div id="root" data-route="${page.url}">`)
+      .replace('<!--app-html-->', render(page.url))
     if (page.url !== '/') {
       html = html
         .replace(/<title>[^<]*<\/title>/, `<title>${escape(page.title)}</title>`)
@@ -43,7 +46,14 @@ async function main() {
         .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${canonical}$2`)
         .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${canonical}$2`)
     }
-    const file = page.url === '/' ? resolve(dist, 'index.html') : resolve(dist, `.${page.url}`, 'index.html')
+    if (page.url === '/404') html = html.replace('</head>', '<meta name="robots" content="noindex" /></head>')
+    // Vercel serves 404.html for unknown paths.
+    const file =
+      page.url === '/'
+        ? resolve(dist, 'index.html')
+        : page.url === '/404'
+          ? resolve(dist, '404.html')
+          : resolve(dist, `.${page.url}`, 'index.html')
     await mkdir(dirname(file), { recursive: true })
     await writeFile(file, html)
     console.log(`prerendered ${page.url}`)

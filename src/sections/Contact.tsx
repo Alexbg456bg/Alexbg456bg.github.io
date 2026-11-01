@@ -1,53 +1,98 @@
 import { AnimatePresence, m } from 'framer-motion'
-import { useId, useState, type FormEvent, type ReactNode } from 'react'
-import { Bracket } from '../components/brand/Logo'
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { Bracket, Logo } from '../components/brand/Logo'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
-import { ParallaxBracket } from '../components/ui/ParallaxBracket'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { formEndpoint, siteConfig } from '../config'
 import { contact } from '../content'
 import { easeBrand } from '../lib/motion'
+import { PREFILL_EVENT } from './Services'
 
 type Fields = { name: string; email: string; message: string }
-type Errors = Partial<Record<keyof Fields, string>>
+type Key = keyof Fields
 type Status = 'idle' | 'sending' | 'success' | 'error'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const t = contact.form
+const ERROR = '#FF9EAE'
 
-function validate(f: Fields): Errors {
-  const e: Errors = {}
-  if (!f.name.trim()) e.name = t.errors.nameRequired
-  if (!f.email.trim()) e.email = t.errors.emailRequired
-  else if (!EMAIL_RE.test(f.email.trim())) e.email = t.errors.emailInvalid
-  if (!f.message.trim()) e.message = t.errors.messageRequired
-  else if (f.message.trim().length < 10) e.message = t.errors.messageShort
-  return e
+function validateField(key: Key, value: string): string | undefined {
+  const v = value.trim()
+  if (key === 'name') return v ? undefined : t.errors.nameRequired
+  if (key === 'email') {
+    if (!v) return t.errors.emailRequired
+    return EMAIL_RE.test(v) ? undefined : t.errors.emailInvalid
+  }
+  if (!v) return t.errors.messageRequired
+  return v.length < 10 ? t.errors.messageShort : undefined
 }
 
-function Field({
+/** Input with a label that floats up on focus or when filled (transform only). */
+function FloatingField({
   id,
   label,
+  value,
   error,
-  children,
+  multiline = false,
+  type = 'text',
+  autoComplete,
+  inputMode,
+  onChange,
+  onBlur,
 }: {
   id: string
   label: string
+  value: string
   error?: string
-  children: ReactNode
+  multiline?: boolean
+  type?: string
+  autoComplete?: string
+  inputMode?: 'email' | 'text'
+  onChange: (v: string) => void
+  onBlur: () => void
 }) {
+  const invalid = !!error
+  const cls = `peer block w-full rounded-xl border bg-navy-950/60 px-4 pb-3 pt-7 text-ink placeholder-transparent transition-colors duration-300 focus:outline-none ${
+    invalid ? 'border-[#FF9EAE]/70 focus:border-[#FF9EAE]' : 'border-line hover:border-ink/30 focus:border-cyan'
+  }`
+  const common = {
+    id,
+    name: id,
+    value,
+    placeholder: label,
+    'aria-invalid': invalid,
+    'aria-describedby': invalid ? `${id}-error` : undefined,
+    onBlur,
+    className: cls,
+  }
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-ink">
-        {label}
-      </label>
-      {children}
+      <div className="relative">
+        {multiline ? (
+          <textarea {...common} rows={6} onChange={(e) => onChange(e.target.value)} className={`${cls} resize-y`} />
+        ) : (
+          <input
+            {...common}
+            type={type}
+            autoComplete={autoComplete}
+            inputMode={inputMode}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        )}
+        <label
+          htmlFor={id}
+          className="pointer-events-none absolute left-4 top-[1.15rem] origin-left text-ink-muted transition-transform duration-300 ease-brand peer-focus:-translate-y-3 peer-focus:scale-[0.78] peer-focus:text-cyan peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-[0.78]"
+        >
+          {label}
+        </label>
+      </div>
       <AnimatePresence initial={false}>
         {error && (
           <m.p
             id={`${id}-error`}
-            className="mt-2 text-sm text-[#FF9EAE]"
+            className="mt-2 text-sm"
+            style={{ color: ERROR }}
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -61,32 +106,83 @@ function Field({
   )
 }
 
-const inputCls = (invalid: boolean) =>
-  `block w-full rounded-xl border bg-navy-950/60 px-4 py-3.5 text-ink placeholder:text-ink-faint transition-colors duration-300 focus:outline-none focus-visible:outline-none ${
-    invalid ? 'border-[#FF9EAE]/70 focus:border-[#FF9EAE]' : 'border-line hover:border-ink/30 focus:border-cyan'
-  }`
+/** Brackets slide together and the logo draws itself. */
+function Success({ onAgain }: { onAgain: () => void }) {
+  // The logo starts drawing as the brackets meet.
+  const [showLogo, setShowLogo] = useState(false)
+  useEffect(() => {
+    const id = window.setTimeout(() => setShowLogo(true), 750)
+    return () => window.clearTimeout(id)
+  }, [])
+
+  return (
+    <m.div
+      key="success"
+      role="status"
+      className="flex min-h-[26rem] flex-col items-center justify-center text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <span className="relative flex h-24 w-64 items-center justify-center" aria-hidden="true">
+        <m.span
+          className="absolute left-0 text-cyan"
+          initial={{ x: -60, opacity: 0 }}
+          animate={{ x: 40, opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 1, ease: easeBrand }}
+        >
+          <Bracket side="left" className="h-20 w-auto" />
+        </m.span>
+        <m.span
+          className="absolute right-0 text-cyan"
+          initial={{ x: 60, opacity: 0 }}
+          animate={{ x: -40, opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 1, ease: easeBrand }}
+        >
+          <Bracket side="right" className="h-20 w-auto" />
+        </m.span>
+        {showLogo && <Logo ink="white" draw title={null} className="h-20 w-auto" />}
+      </span>
+      <p className="mt-8 max-w-sm text-lg font-medium">{t.success}</p>
+      <button type="button" onClick={onAgain} className="mt-6 text-sm font-semibold text-cyan underline-offset-4 hover:underline">
+        {t.again}
+      </button>
+    </m.div>
+  )
+}
 
 function ContactForm() {
   const uid = useId()
-  const ids = { name: `${uid}-name`, email: `${uid}-email`, message: `${uid}-message` }
+  const ids: Record<Key, string> = { name: `${uid}-name`, email: `${uid}-email`, message: `${uid}-message` }
   const [fields, setFields] = useState<Fields>({ name: '', email: '', message: '' })
-  const [errors, setErrors] = useState<Errors>({})
-  const [touched, setTouched] = useState(false)
+  const [touched, setTouched] = useState<Partial<Record<Key, boolean>>>({})
   const [status, setStatus] = useState<Status>('idle')
   const [errorText, setErrorText] = useState(t.error)
+  const [prefilled, setPrefilled] = useState(false)
+  const messageRef = useRef(fields.message)
+  messageRef.current = fields.message
 
-  const update = (key: keyof Fields) => (value: string) => {
-    const next = { ...fields, [key]: value }
-    setFields(next)
-    if (touched) setErrors(validate(next))
-  }
+  // The service picker sends its summary here.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const text = (e as CustomEvent<string>).detail
+      setFields((f) => ({ ...f, message: messageRef.current.trim() ? `${messageRef.current.trim()}\n\n${text}` : text }))
+      setPrefilled(true)
+      setStatus('idle')
+    }
+    window.addEventListener(PREFILL_EVENT, onPrefill)
+    return () => window.removeEventListener(PREFILL_EVENT, onPrefill)
+  }, [])
+
+  const errorFor = (key: Key) => (touched[key] ? validateField(key, fields[key]) : undefined)
+  const update = (key: Key) => (value: string) => setFields((f) => ({ ...f, [key]: value }))
+  const blur = (key: Key) => () => setTouched((tt) => ({ ...tt, [key]: true }))
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setTouched(true)
-    const found = validate(fields)
-    setErrors(found)
-    const firstInvalid = (Object.keys(found) as (keyof Fields)[])[0]
+    setTouched({ name: true, email: true, message: true })
+    const firstInvalid = (['name', 'email', 'message'] as Key[]).find((k) => validateField(k, fields[k]))
     if (firstInvalid) {
       document.getElementById(ids[firstInvalid])?.focus()
       return
@@ -107,108 +203,52 @@ function ContactForm() {
       if (!res.ok) throw new Error(String(res.status))
       setStatus('success')
       setFields({ name: '', email: '', message: '' })
-      setTouched(false)
+      setTouched({})
+      setPrefilled(false)
     } catch {
       setErrorText(t.error)
       setStatus('error')
     }
   }
 
-  const describedBy = (key: keyof Fields) => (errors[key] ? `${ids[key]}-error` : undefined)
-
   return (
-    <div className="relative overflow-hidden rounded-card border border-line bg-navy-850/70 p-6 sm:p-10">
+    <div className="glass-border relative overflow-hidden rounded-card bg-navy-850/60 p-6 sm:p-10">
       <AnimatePresence mode="wait" initial={false}>
         {status === 'success' ? (
-          <m.div
-            key="success"
-            role="status"
-            className="flex min-h-[26rem] flex-col items-center justify-center text-center"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: easeBrand }}
-          >
-            <span className="flex items-center gap-3 text-cyan" aria-hidden="true">
-              <Bracket side="left" className="h-12 w-auto" />
-              <svg viewBox="0 0 24 24" className="h-10 w-10">
-                <m.path
-                  d="M5 12.5l4.5 4.5L19 7.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.6, ease: easeBrand, delay: 0.2 }}
-                />
-              </svg>
-              <Bracket side="right" className="h-12 w-auto" />
-            </span>
-            <p className="mt-8 max-w-sm text-lg font-medium">{t.success}</p>
-            <button
-              type="button"
-              onClick={() => setStatus('idle')}
-              className="mt-6 text-sm font-semibold text-cyan underline-offset-4 hover:underline"
-            >
-              {t.again}
-            </button>
-          </m.div>
+          <Success onAgain={() => setStatus('idle')} />
         ) : (
           <m.form
             key="form"
             noValidate
             onSubmit={onSubmit}
-            className="grid gap-6"
+            className="grid gap-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.35 }}
           >
-            <div className="grid gap-6 sm:grid-cols-2">
-              <Field id={ids.name} label={t.name} error={errors.name}>
-                <input
-                  id={ids.name}
-                  name="name"
-                  autoComplete="name"
-                  placeholder={t.namePlaceholder}
-                  value={fields.name}
-                  onChange={(e) => update('name')(e.target.value)}
-                  aria-invalid={!!errors.name}
-                  aria-describedby={describedBy('name')}
-                  className={inputCls(!!errors.name)}
-                />
-              </Field>
-              <Field id={ids.email} label={t.email} error={errors.email}>
-                <input
-                  id={ids.email}
-                  name="email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder={t.emailPlaceholder}
-                  value={fields.email}
-                  onChange={(e) => update('email')(e.target.value)}
-                  aria-invalid={!!errors.email}
-                  aria-describedby={describedBy('email')}
-                  className={inputCls(!!errors.email)}
-                />
-              </Field>
-            </div>
-            <Field id={ids.message} label={t.message} error={errors.message}>
-              <textarea
-                id={ids.message}
-                name="message"
-                rows={6}
-                placeholder={t.messagePlaceholder}
-                value={fields.message}
-                onChange={(e) => update('message')(e.target.value)}
-                aria-invalid={!!errors.message}
-                aria-describedby={describedBy('message')}
-                className={`${inputCls(!!errors.message)} resize-y`}
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FloatingField id={ids.name} label={t.name} autoComplete="name" value={fields.name} error={errorFor('name')} onChange={update('name')} onBlur={blur('name')} />
+              <FloatingField
+                id={ids.email}
+                label={t.email}
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={fields.email}
+                error={errorFor('email')}
+                onChange={update('email')}
+                onBlur={blur('email')}
               />
-            </Field>
+            </div>
+            <FloatingField id={ids.message} label={t.message} multiline value={fields.message} error={errorFor('message')} onChange={update('message')} onBlur={blur('message')} />
+            <AnimatePresence>
+              {prefilled && (
+                <m.p className="-mt-2 text-sm text-cyan" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  {t.prefilled}
+                </m.p>
+              )}
+            </AnimatePresence>
             {/* Spam trap for Formspree; hidden from people and assistive tech. */}
             <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
@@ -229,12 +269,7 @@ function ContactForm() {
               <div aria-live="polite" className="min-h-6 text-sm">
                 <AnimatePresence>
                   {status === 'error' && (
-                    <m.p
-                      className="text-[#FF9EAE]"
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0 }}
-                    >
+                    <m.p style={{ color: ERROR }} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
                       {errorText}
                     </m.p>
                   )}
@@ -252,7 +287,6 @@ export function Contact() {
   const { email, phone } = siteConfig.contact
   return (
     <section id="kontakt" aria-labelledby="kontakt-title" className="relative overflow-hidden py-24 sm:py-32 lg:py-40">
-      <ParallaxBracket side="right" className="-right-24 top-32 hidden h-[34rem] lg:block" />
       <div className="container-x relative grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
         <div>
           <SectionHeader id="kontakt-title" eyebrow={contact.eyebrow} title={contact.title} intro={contact.intro} />
