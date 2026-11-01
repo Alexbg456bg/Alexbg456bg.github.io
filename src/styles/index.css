@@ -1,0 +1,88 @@
+@import './fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --header-h: 4.5rem;
+  }
+
+  html {
+    background: #07152a;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: var(--header-h);
+  }
+
+  body {
+    @apply bg-navy-950 font-sans text-ink antialiased;
+    /* Manrope ships Bulgarian locale forms (cursive-style в, д, т) that kick in with lang="bg".
+       We use the standard Cyrillic forms to match the geometric logo. */
+    font-feature-settings: 'locl' 0;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: rgba(0, 194, 255, 0.35);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #00c2ff;
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-content px-4 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.18em] text-cyan;
+  }
+
+  /* Static dot grid used behind sections. */
+  .dot-grid {
+    background-image: radial-gradient(rgba(163, 181, 202, 0.18) 1px, transparent 1.2px);
+    background-size: 28px 28px;
+  }
+  .dot-grid-accent {
+    background-image: radial-gradient(rgba(0, 194, 255, 0.9) 1.2px, transparent 1.6px);
+    background-size: 28px 28px;
+  }
+
+  .skip-link {
+    @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-cyan px-4 py-2 font-semibold text-navy-950 transition-transform;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

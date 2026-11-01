@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>aecodezonebg — изработка на уеб сайтове на React</title>
+    <meta
+      name="description"
+      content="Уеб студио aecodezonebg: изработка на каталожни и бизнес сайтове на React, по желание с админ панел, хостинг и месечна поддръжка."
+    />
+    <meta name="theme-color" content="#0B1F3A" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- TODO: replace https://aecodezonebg.example with the real domain (also in src/config.ts, public/robots.txt, public/sitemap.xml). -->
+    <link rel="canonical" href="https://aecodezonebg.example/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="bg_BG" />
+    <meta property="og:site_name" content="aecodezonebg" />
+    <meta property="og:title" content="aecodezonebg — изработка на уеб сайтове на React" />
+    <meta
+      property="og:description"
+      content="Каталожни и бизнес сайтове на React — с админ панел, ако ви трябва, хостинг и поддръжка след пускането."
+    />
+    <meta property="og:url" content="https://aecodezonebg.example/" />
+    <meta property="og:image" content="https://aecodezonebg.example/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Логото на aecodezonebg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href="/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "aecodezonebg",
+        "url": "https://aecodezonebg.example/",
+        "logo": "https://aecodezonebg.example/logo.svg",
+        "description": "Уеб студио за изработка на каталожни и бизнес сайтове на React, с админ панел, хостинг и месечна поддръжка.",
+        "founder": [
+          { "@type": "Person", "name": "Алекс" },
+          { "@type": "Person", "name": "Емо" }
+        ]
+      }
+    </script>
+    <!-- Preloader: decided before first paint, drawn in pure CSS (see #ae-preloader below). -->
+    <script>
+      ;(function () {
+        try {
+          if (
+            location.pathname === '/' &&
+            !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+            !sessionStorage.getItem('ae-preloader-seen')
+          ) {
+            document.documentElement.classList.add('ae-preload')
+            sessionStorage.setItem('ae-preloader-seen', '1')
+          }
+        } catch (e) {}
+      })()
+    </script>
+    <style>
+      #ae-preloader {
+        display: none;
+      }
+      .ae-preload #ae-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #07152a;
+        animation: ae-pl-out 0.3s ease-out 1.2s forwards;
+      }
+      .ae-preload.ae-preload-done #ae-preloader {
+        animation: ae-pl-out 0.25s ease-out forwards;
+      }
+      @keyframes ae-pl-out {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+      #ae-preloader svg {
+        width: 10rem;
+      }
+      @media (min-width: 640px) {
+        #ae-preloader svg {
+          width: 14rem;
+        }
+      }
+      #ae-preloader button {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 2rem;
+        padding: 0.5rem 1rem;
+        border: 0;
+        border-radius: 999px;
+        background: none;
+        color: #a3b5ca;
+        font: 500 0.75rem/1 'JetBrains Mono', ui-monospace, monospace;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .ae-draw {
+        stroke-dasharray: 1 2;
+        stroke-dashoffset: 1;
+        animation-name: ae-draw;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        animation-fill-mode: both;
+      }
+      @keyframes ae-draw {
+        0% {
+          opacity: 0;
+          stroke-dashoffset: 1;
+        }
+        1% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+          stroke-dashoffset: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ae-draw {
+          animation: none;
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
+    <noscript>
+      <!-- Without JavaScript the intro animations never run; show everything in its final state. -->
+      <style>
+        #root [style] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <!-- preloader:start -->
+    <div id="ae-preloader">
+      <svg viewBox="0 0 1240 700" aria-hidden="true" focusable="false"><defs><mask id="pre-a-gap-R0" maskUnits="userSpaceOnUse" x="0" y="0" width="1240" height="700"><rect width="1240" height="700" fill="#fff"></rect><path d="M552 350A244 244 0 0 0 1040 350Z" fill="#000"></path></mask><mask id="pre-e-gap-R0" maskUnits="userSpaceOnUse" x="0" y="0" width="1240" height="700"><rect width="1240" height="700" fill="#fff"></rect><circle cx="444" cy="350" r="244" fill="#000"></circle></mask><clipPath id="pre-e-top-R0"><rect width="1240" height="388"></rect></clipPath><clipPath id="pre-e-bottom-R0"><path d="M0 344H796V441H1240V700H0Z"></path></clipPath></defs><g fill="none" stroke-width="76"><g stroke="#00C2FF" stroke-linecap="round" stroke-linejoin="round"><path d="M275 48L46 350L275 652" pathLength="1" class="ae-draw" style="animation-delay:0s;animation-duration:0.6s"></path><path d="M965 48L1194 350L965 652" pathLength="1" class="ae-draw" style="animation-delay:0.05s;animation-duration:0.6s"></path></g><g stroke="#FFFFFF" mask="url(#pre-a-gap-R0)"><path d="M620 350A176 176 0 1 0 268 350A176 176 0 1 0 620 350" pathLength="1" class="ae-draw" style="animation-delay:0.15s;animation-duration:0.6s"></path><path d="M620 350V564" pathLength="1" class="ae-draw" style="animation-delay:0.6s;animation-duration:0.2s"></path></g><path stroke="#FFFFFF" clip-path="url(#pre-e-bottom-R0)" d="M620 344V350A176 176 0 0 0 796 526A176 176 0 0 0 961.4 410.2" pathLength="1" class="ae-draw" style="animation-delay:0.7s;animation-duration:0.35s"></path><g stroke="#00C2FF" mask="url(#pre-e-gap-R0)" clip-path="url(#pre-e-top-R0)"><path d="M651.8 249.1A176 176 0 0 1 963.4 404.4" pathLength="1" class="ae-draw" style="animation-delay:0.8s;animation-duration:0.35s"></path><path d="M972 350H650" pathLength="1" class="ae-draw" style="animation-delay:0.95s;animation-duration:0.25s"></path></g></g></svg>
+      <button type="button" id="ae-preloader-skip">Пропусни</button>
+    </div>
+    <!-- preloader:end -->
+    <script>
+      ;(function () {
+        var root = document.documentElement
+        if (!root.classList.contains('ae-preload')) return
+        var skip = function () {
+          root.classList.add('ae-preload-done')
+          removeEventListener('keydown', skip)
+          document.getElementById('ae-preloader').removeEventListener('click', skip)
+        }
+        addEventListener('keydown', skip)
+        document.getElementById('ae-preloader').addEventListener('click', skip)
+      })()
+    </script>
+    <div id="root"><!--app-html--></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

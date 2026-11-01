@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 700" width="1240" height="700">
+  <defs>
+    <!-- 33px gap where the lower half of "e" crosses "a" -->
+    <mask id="ae-a-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="1240" height="700">
+      <rect width="1240" height="700" fill="#fff"/>
+      <path d="M552 350A244 244 0 0 0 1040 350Z" fill="#000"/>
+    </mask>
+    <!-- 33px gap where the upper half of "e" meets "a" -->
+    <mask id="ae-e-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="1240" height="700">
+      <rect width="1240" height="700" fill="#fff"/>
+      <circle cx="444" cy="350" r="244" fill="#000"/>
+    </mask>
+    <clipPath id="ae-e-top"><rect width="1240" height="388"/></clipPath>
+    <clipPath id="ae-e-bottom"><path d="M0 344H796V441H1240V700H0Z"/></clipPath>
+  </defs>
+  <g fill="none" stroke-width="76">
+    <g stroke="#00C2FF" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M275 48L46 350L275 652"/>
+      <path d="M965 48L1194 350L965 652"/>
+    </g>
+    <g stroke="#FFFFFF" mask="url(#ae-a-gap)">
+      <circle cx="444" cy="350" r="176"/>
+      <path d="M620 350V564"/>
+    </g>
+    <path stroke="#FFFFFF" clip-path="url(#ae-e-bottom)" d="M620 344V350A176 176 0 0 0 796 526A176 176 0 0 0 961.4 410.2"/>
+    <g stroke="#00C2FF" mask="url(#ae-e-gap)" clip-path="url(#ae-e-top)">
+      <path d="M651.8 249.1A176 176 0 0 1 963.4 404.4"/>
+      <path d="M972 350H650"/>
+    </g>
+  </g>
+</svg>
