@@ -1,4 +1,4 @@
-import { AnimatePresence, m } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useId, useState } from 'react'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
@@ -46,20 +46,18 @@ export function Faq() {
                       </span>
                     </button>
                   </h3>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <m.div
-                        id={panel}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: easeBrand }}
-                        className="overflow-hidden"
-                      >
-                        <p className="max-w-2xl pb-7 pr-12 text-pretty leading-relaxed text-ink-muted">{item.a}</p>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Opens without animating height (transform/opacity only): the answer rises in. */}
+                  <div id={panel} hidden={!isOpen}>
+                    <m.p
+                      key={isOpen ? 'open' : 'closed'}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, ease: easeBrand }}
+                      className="max-w-2xl pb-7 pr-12 text-pretty leading-relaxed text-ink-muted"
+                    >
+                      {item.a}
+                    </m.p>
+                  </div>
                 </FadeIn>
               </li>
             )

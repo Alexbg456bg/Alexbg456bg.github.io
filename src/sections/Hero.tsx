@@ -59,7 +59,7 @@ export function Hero({ ready }: { ready: boolean }) {
           delay={0.2}
           stagger={0.08}
           className="mt-7 text-display font-bold sm:mt-9"
-          lineClassName={(i) => `md:whitespace-nowrap ${i === 1 ? 'text-cyan' : '[&_span_span]:text-gradient'}`}
+          lineClassName={(i) => `md:whitespace-nowrap ${i === 1 ? 'text-cyan' : '[&>span]:text-gradient'}`}
         />
 
         <m.p className="mt-7 max-w-xl text-pretty text-lg text-ink-muted sm:text-xl" {...rise(0.6)}>

@@ -17,8 +17,8 @@ type Props = {
 }
 
 /**
- * Word-by-word reveal: each word slides up from behind a mask.
- * Screen readers get the plain text once; the animated words are aria-hidden.
+ * Line-by-line reveal: each line slides up from behind a mask (stagger 60–120 ms).
+ * Screen readers get the plain text once; the animated lines are aria-hidden.
  */
 export function RevealText({
   lines,
@@ -28,7 +28,7 @@ export function RevealText({
   lineClassName,
   delay = 0,
   play,
-  stagger = 0.06,
+  stagger = 0.09,
 }: Props) {
   const reduced = useReducedMotion()
 
@@ -49,35 +49,23 @@ export function RevealText({
       ? { initial: 'hidden', whileInView: 'shown', viewport: { once: true, margin: '0px 0px -12% 0px' } }
       : { initial: 'hidden', animate: play ? 'shown' : 'hidden' }
 
-  let wordIndex = 0
   return (
     <Tag id={id} className={className}>
       <span className="sr-only">{lines.join(' ')}</span>
       <m.span aria-hidden="true" className="block" {...trigger}>
-        {lines.map((line, li) => {
-          const words = line.split(' ')
-          return (
-            <span key={li} className={`block ${lineClassName?.(li) ?? ''}`}>
-              {words.map((word, wi) => {
-                const i = wordIndex++
-                return (
-                  <span key={wi} className="-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-top">
-                    <m.span
-                      className="inline-block"
-                      variants={{
-                        hidden: { y: '115%' },
-                        shown: { y: '0%', transition: { duration: 0.9, ease: easeBrand, delay: delay + i * stagger } },
-                      }}
-                    >
-                      {word}
-                    </m.span>
-                    {wi < words.length - 1 ? ' ' : null}
-                  </span>
-                )
-              })}
-            </span>
-          )
-        })}
+        {lines.map((line, li) => (
+          <span key={li} className={`-mb-[0.14em] block overflow-hidden pb-[0.14em] ${lineClassName?.(li) ?? ''}`}>
+            <m.span
+              className="block"
+              variants={{
+                hidden: { y: '110%' },
+                shown: { y: '0%', transition: { duration: 0.9, ease: easeBrand, delay: delay + li * stagger } },
+              }}
+            >
+              {line}
+            </m.span>
+          </span>
+        ))}
       </m.span>
     </Tag>
   )

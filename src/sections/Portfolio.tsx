@@ -6,6 +6,7 @@ import { Bracket } from '../components/brand/Logo'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { ProjectShot, projectImage } from '../components/ui/ProjectShot'
 import { ProjectVideo } from '../components/ui/ProjectVideo'
+import { Tilt } from '../components/ui/Tilt'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { cursor, portfolio, ui, type Project } from '../content'
@@ -164,9 +165,11 @@ export function Portfolio() {
               <li key={p.slug}>
                 <article aria-labelledby={`p-${p.slug}`}>
                   <FadeIn className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
-                    <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="block">
-                      <ProjectShot project={p} />
-                    </Link>
+                    <Tilt>
+                      <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="block">
+                        <ProjectShot project={p} />
+                      </Link>
+                    </Tilt>
                     <ProjectText project={p} index={i} />
                   </FadeIn>
                 </article>
@@ -209,27 +212,45 @@ export function Portfolio() {
           </div>
         </div>
 
-        <div className="relative pb-10 pr-8">
-          <Link
-            to={`/proekti/${project.slug}`}
-            tabIndex={-1}
-            aria-hidden="true"
-            data-cursor="view"
-            data-cursor-label={cursor.view}
-            className="block"
-          >
-            <div className="glass-border overflow-hidden rounded-2xl bg-navy-850 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.9)]">
-              <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
-                <span className="flex gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
-                </span>
-                <span className="mx-auto rounded-full bg-navy-950/70 px-4 py-1 font-mono text-[0.7rem] text-ink-muted">
-                  {project.host}
-                </span>
+        <Tilt max={2.5}>
+          <div className="relative pb-10 pr-8">
+            <Link
+              to={`/proekti/${project.slug}`}
+              tabIndex={-1}
+              aria-hidden="true"
+              data-cursor="view"
+              data-cursor-label={cursor.view}
+              className="block"
+            >
+              <div className="glass-border overflow-hidden rounded-2xl bg-navy-850 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.9)]">
+                <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
+                  <span className="flex gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />
+                  </span>
+                  <span className="mx-auto rounded-full bg-navy-950/70 px-4 py-1 font-mono text-[0.7rem] text-ink-muted">
+                    {project.host}
+                  </span>
+                </div>
+                <div className="relative aspect-[16/10] overflow-hidden bg-navy-950">
+                  {portfolio.items.map((p, i) => (
+                    <div
+                      key={p.slug}
+                      data-layer={i}
+                      className={`absolute inset-0 overflow-hidden ${i > 0 ? 'translate-y-full' : ''}`}
+                    >
+                      <div data-inner className={`h-full w-full ${i > 0 ? '-translate-y-full' : ''}`}>
+                        <ProjectVideo project={p} load={near} playing={visible && i === active} reduced={reduced} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="relative aspect-[16/10] overflow-hidden bg-navy-950">
+            </Link>
+
+            <div className="absolute -bottom-2 right-0 w-[24%] overflow-hidden rounded-[1.6rem] border-[5px] border-navy-700 bg-navy-950 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]">
+              <div className="relative aspect-[9/19] overflow-hidden">
                 {portfolio.items.map((p, i) => (
                   <div
                     key={p.slug}
@@ -237,38 +258,22 @@ export function Portfolio() {
                     className={`absolute inset-0 overflow-hidden ${i > 0 ? 'translate-y-full' : ''}`}
                   >
                     <div data-inner className={`h-full w-full ${i > 0 ? '-translate-y-full' : ''}`}>
-                      <ProjectVideo project={p} load={near} playing={visible && i === active} reduced={reduced} />
+                      <img
+                        src={projectImage(p, 'mobile')}
+                        width={600}
+                        height={1299}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover object-top"
+                      />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </Link>
-
-          <div className="absolute -bottom-2 right-0 w-[24%] overflow-hidden rounded-[1.6rem] border-[5px] border-navy-700 bg-navy-950 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]">
-            <div className="relative aspect-[9/19] overflow-hidden">
-              {portfolio.items.map((p, i) => (
-                <div
-                  key={p.slug}
-                  data-layer={i}
-                  className={`absolute inset-0 overflow-hidden ${i > 0 ? 'translate-y-full' : ''}`}
-                >
-                  <div data-inner className={`h-full w-full ${i > 0 ? '-translate-y-full' : ''}`}>
-                    <img
-                      src={projectImage(p, 'mobile')}
-                      width={600}
-                      height={1299}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        </div>
+        </Tilt>
       </div>
     </section>
   )
