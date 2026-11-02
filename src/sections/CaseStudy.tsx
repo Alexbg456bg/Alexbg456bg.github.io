@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { ProjectShot, projectImage } from '../components/ui/ProjectShot'
-import { meta, portfolio, ui, type Project } from '../content'
+import { meta, pages, portfolio, ui, type Project } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
 import { useSmoothScroll } from '../lib/smooth-scroll'
@@ -23,7 +23,7 @@ export function CaseStudy({ project }: { project: Project }) {
   const index = portfolio.items.findIndex((p) => p.slug === project.slug)
   const next = portfolio.items[(index + 1) % portfolio.items.length]
 
-  const close = () => navigate('/', { preventScrollReset: true })
+  const close = () => navigate('/proekti', { preventScrollReset: true })
 
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null
@@ -63,7 +63,7 @@ export function CaseStudy({ project }: { project: Project }) {
     window.addEventListener('keydown', onKey)
     return () => {
       window.removeEventListener('keydown', onKey)
-      document.title = meta.title
+      document.title = pages.find((p) => p.path === '/proekti')?.title ?? meta.title
     }
   }, [project.slug])
 

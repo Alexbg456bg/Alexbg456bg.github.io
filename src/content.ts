@@ -1,33 +1,54 @@
 // All copy on the site lives here so it can be edited without touching components.
 // Rule: only facts the team has confirmed. No prices, testimonials, metrics or invented services.
 
-export type NavItem = { id: string; label: string }
+export type NavItem = { to: string; label: string }
 
 export const nav: NavItem[] = [
-  { id: 'proekti', label: 'Проекти' },
-  { id: 'uslugi', label: 'Услуги' },
-  { id: 'ceni', label: 'Цени' },
-  { id: 'za-nas', label: 'За нас' },
-  { id: 'kontakt', label: 'Контакт' },
+  { to: '/proekti', label: 'Проекти' },
+  { to: '/uslugi', label: 'Услуги' },
+  { to: '/ceni', label: 'Цени' },
+  { to: '/za-nas', label: 'За нас' },
+  { to: '/kontakt', label: 'Контакт' },
 ]
 
-/** Sections in page order, for the side progress indicator. */
-export const sections: NavItem[] = [
-  { id: 'top', label: 'Начало' },
-  { id: 'proekti', label: 'Портфолио' },
-  { id: 'uslugi', label: 'Услуги' },
-  { id: 'ceni', label: 'Цени' },
-  { id: 'proces', label: 'Процес' },
-  { id: 'za-nas', label: 'За нас' },
-  { id: 'vaprosi', label: 'Въпроси' },
-  { id: 'kontakt', label: 'Контакт' },
+export type PageMeta = { path: string; title: string; description: string }
+
+/** Every page of the site, for routing, prerendering, titles and sitemap.xml. */
+export const pages: PageMeta[] = [
+  {
+    path: '/',
+    title: 'aecodezonebg — изработка на сайтове за малък и среден бизнес',
+    description:
+      'Уеб студио aecodezonebg: каталожни и бизнес сайтове, които се отварят добре на телефон. Цени от 700 €, оферта до 24 часа, хостинг и поддръжка.',
+  },
+  {
+    path: '/proekti',
+    title: 'Проекти | aecodezonebg',
+    description: 'Четири сайта на живо, направени от aecodezonebg — сред тях сайтовете на PestGuard Pro и АДРИНА ООД.',
+  },
+  {
+    path: '/uslugi',
+    title: 'Услуги | aecodezonebg',
+    description: 'Каталожни и бизнес сайтове, по желание с админ панел, хостинг и месечна поддръжка. Изберете какъв сайт ви трябва.',
+  },
+  {
+    path: '/ceni',
+    title: 'Цени | aecodezonebg',
+    description: 'Каталожен сайт от 700 €, с админ панел от 950 €, бизнес сайт по запитване. Хостинг, домейн и поддръжка — отделно.',
+  },
+  {
+    path: '/za-nas',
+    title: 'За нас | aecodezonebg',
+    description: 'Зад aecodezonebg сме Алекс и Емо — малък екип от ТУ-Варна. Говорите директно с нас.',
+  },
+  {
+    path: '/kontakt',
+    title: 'Контакт | aecodezonebg',
+    description: 'Пишете ни за вашия сайт — до 24 часа ще ви отговорим с въпроси или с оферта.',
+  },
 ]
 
-export const meta = {
-  title: 'aecodezonebg — изработка на сайтове за малък и среден бизнес',
-  description:
-    'Уеб студио aecodezonebg: каталожни и бизнес сайтове, които се отварят добре на телефон. Цени от 700 €, оферта до 24 часа, хостинг и поддръжка.',
-}
+export const meta = { title: pages[0].title, description: pages[0].description }
 
 export type CodeToken = { t: string; c: 'kw' | 'fn' | 'tag' | 'attr' | 'str' | 'p' | 'txt' }
 /** What a finished code line adds to the preview page next to it. */
@@ -71,6 +92,27 @@ export const tech = ['React', 'TypeScript', 'Tailwind CSS', 'Vite']
 
 export const cursor = { view: 'Виж' }
 
+/** Home page: the four projects as a teaser that leads to /proekti. */
+export const teaser = {
+  eyebrow: 'Проекти',
+  title: 'Сайтове на живо',
+  cta: 'Всички проекти',
+}
+
+/** Home page: the three prices at a glance, leading to /ceni. */
+export const pricingTeaser = {
+  eyebrow: 'Цени',
+  title: 'Ясни цени от началото',
+  cta: 'Всички цени',
+  note: 'Хостинг, домейн и поддръжка — отделно.',
+}
+
+export const cta = {
+  title: 'Имате идея за сайт?',
+  text: 'Разкажете ни накратко — до 24 часа ще ви отговорим с въпроси или с оферта.',
+  button: 'Заяви оферта',
+}
+
 export type ServiceIcon = 'catalog' | 'business' | 'cms' | 'hosting'
 
 export type Project = {
@@ -90,7 +132,7 @@ export type Project = {
 }
 
 export const portfolio = {
-  eyebrow: '01 — Портфолио',
+  eyebrow: '01 — Проекти',
   title: 'Избрани проекти',
   intro: 'Четири сайта на живо. Отворете който и да е от тях.',
   clientLabel: 'Клиент',
@@ -242,7 +284,7 @@ export const configurator = {
 }
 
 export const process = {
-  eyebrow: '04 — Процес',
+  eyebrow: 'Процес',
   title: 'Как работим',
   steps: [
     { title: 'Запитване', text: 'Пишете ни какво ви трябва. Няколко изречения стигат.' },
@@ -309,22 +351,23 @@ export const pricing = {
 
 /** About the team. Only confirmed facts — no bio, years of experience or client counts. */
 export const about = {
-  eyebrow: '05 — За нас',
+  eyebrow: '04 — За нас',
   title: 'Хората зад сайта',
-  text: [
-    'Ние сме Алекс и Емо — малък екип, студенти в ТУ-Варна.',
-    'Говорите директно с нас, от първото запитване до пускането.',
-    'След като сайтът е онлайн, оставаме насреща с хостинг и поддръжка.',
-  ],
+  intro: 'Ние сме Алекс и Емо — малък екип, студенти в ТУ-Варна.',
+  points: [
+    { icon: 'business', title: 'Директна връзка', text: 'Говорите с нас, от първото запитване до пускането.' },
+    { icon: 'catalog', title: 'Оферта до 24 часа', text: 'Отговаряме бързо и с конкретна оферта.' },
+    { icon: 'hosting', title: 'Хостинг и поддръжка', text: 'След пускането оставаме насреща всеки месец.' },
+  ] satisfies { icon: ServiceIcon; title: string; text: string }[],
   people: [
-    { name: 'Алекс', photo: '/team/aleks.webp', alt: 'Алекс' },
-    { name: 'Емо', photo: '/team/emo.webp', alt: 'Емо' },
+    { name: 'Алекс', photo: '/team/aleks.webp', alt: 'Портретна снимка на Алекс' },
+    { name: 'Емо', photo: '/team/emo.webp', alt: 'Снимка на Емо в планината' },
   ],
 }
 
 /** Answers built only from confirmed facts. No prices or deadlines. */
 export const faq = {
-  eyebrow: '06 — Въпроси',
+  eyebrow: 'Въпроси',
   title: 'Често задавани въпроси',
   intro: 'Не намирате отговор? Пишете ни — отговаряме лично.',
   items: [
@@ -356,9 +399,10 @@ export const faq = {
 }
 
 export const contact = {
-  eyebrow: '07 — Контакт',
+  eyebrow: '05 — Контакт',
   title: 'Да направим вашия сайт',
   intro: 'Разкажете ни накратко за проекта. До 24 часа ще ви отговорим с въпроси или с оферта.',
+  replyBy: 'Отговарят ви лично Алекс и Емо',
   emailLabel: 'Имейл',
   phoneLabel: 'Телефон',
   form: {

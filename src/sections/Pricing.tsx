@@ -1,12 +1,12 @@
 import { AnimatePresence, animate, m, useMotionValue, useTransform } from 'framer-motion'
-import { useEffect, useState, type MouseEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { pricing as p } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
-import { useSmoothScroll } from '../lib/smooth-scroll'
+import { useGo } from '../lib/nav'
 
 function Check() {
   return (
@@ -58,23 +58,18 @@ function Card({ children, delay, featured = false }: { children: React.ReactNode
 /** Prices "from", in EUR. The catalog card switches between plain and with an admin panel. */
 export function Pricing() {
   const reduced = useReducedMotion()
-  const scroll = useSmoothScroll()
+  const go = useGo()
   const [variantId, setVariantId] = useState(p.catalog.variants[0].id)
   const variant = p.catalog.variants.find((v) => v.id === variantId) ?? p.catalog.variants[0]
-
-  const go = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    scroll.scrollTo('kontakt')
-  }
 
   return (
     <section id="ceni" aria-labelledby="ceni-title" className="section">
       <div className="container-x">
-        <SectionHeader id="ceni-title" eyebrow={p.eyebrow} title={p.title} intro={p.intro} split />
+        <SectionHeader as="h1" id="ceni-title" eyebrow={p.eyebrow} title={p.title} intro={p.intro} split />
 
         <div className="mt-12 grid gap-5 sm:mt-16 lg:grid-cols-3">
           <Card delay={0} featured>
-            <h3 className="text-xl font-semibold tracking-tight">{p.catalog.title}</h3>
+            <h2 className="text-xl font-semibold tracking-tight">{p.catalog.title}</h2>
             <p className="mt-2 text-ink-muted">{p.catalog.text}</p>
 
             <div role="group" aria-label={p.catalog.toggleLabel} className="mt-6 grid grid-cols-2 rounded-full bg-navy-950/70 p-1 ring-1 ring-inset ring-line">
@@ -133,7 +128,7 @@ export function Pricing() {
           </Card>
 
           <Card delay={0.08}>
-            <h3 className="text-xl font-semibold tracking-tight">{p.business.title}</h3>
+            <h2 className="text-xl font-semibold tracking-tight">{p.business.title}</h2>
             <p className="mt-2 text-ink-muted">{p.business.text}</p>
             <p className="mt-6 text-3xl font-bold tracking-tight lg:mt-[5.6rem] lg:text-4xl">{p.onRequest}</p>
             <ul className="mt-7 space-y-3 border-t border-line pt-6">
@@ -147,7 +142,7 @@ export function Pricing() {
           </Card>
 
           <Card delay={0.16}>
-            <h3 className="eyebrow">{p.extrasTitle}</h3>
+            <h2 className="eyebrow">{p.extrasTitle}</h2>
             <dl className="mt-5 divide-y divide-line">
               {p.extras.map((x) => (
                 <div key={x.label} className="flex items-baseline justify-between gap-4 py-3">
@@ -167,7 +162,7 @@ export function Pricing() {
         </div>
 
         <FadeIn delay={0.2} className="mt-10 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center sm:gap-6">
-          <MagneticButton href="#kontakt" onClick={go}>
+          <MagneticButton href="/kontakt" onClick={go('/kontakt')}>
             {p.cta}
             <ArrowIcon className="transition-transform duration-300 ease-brand group-hover:translate-x-1" />
           </MagneticButton>

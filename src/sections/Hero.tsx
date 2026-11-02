@@ -1,5 +1,4 @@
 import { m } from 'framer-motion'
-import type { MouseEvent } from 'react'
 import { Bracket } from '../components/brand/Logo'
 import { CursorGrid } from '../components/ui/CursorGrid'
 import { HeroScene } from '../components/ui/HeroScene'
@@ -7,19 +6,17 @@ import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { RevealText } from '../components/ui/RevealText'
 import { hero } from '../content'
 import { useReducedMotion } from '../lib/media'
+import { useIntroReady } from '../lib/preloader'
 import { easeBrand } from '../lib/motion'
-import { useSmoothScroll } from '../lib/smooth-scroll'
+import { useGo } from '../lib/nav'
 
 /** Headline, two calls to action, then the "from code to site" scene. */
-export function Hero({ ready }: { ready: boolean }) {
+export function Hero() {
+  // Kept here, not in App: a state change in App during hydration would re-render every section.
+  const ready = useIntroReady()
   const reduced = useReducedMotion()
-  const scroll = useSmoothScroll()
+  const go = useGo()
   const play = ready || reduced
-
-  const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    scroll.scrollTo(id)
-  }
 
   const fadeUp = (delay: number) => ({
     initial: reduced ? false : { opacity: 0, y: 20 },
@@ -67,11 +64,11 @@ export function Hero({ ready }: { ready: boolean }) {
         </m.p>
 
         <m.div className="mt-10 flex w-full max-w-xs flex-col items-center gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:gap-4" {...fadeUp(0.75)}>
-          <MagneticButton href="#kontakt" onClick={go('kontakt')} className="w-full sm:w-auto">
+          <MagneticButton href="/kontakt" onClick={go('/kontakt')} className="w-full sm:w-auto">
             {hero.primaryCta}
             <ArrowIcon className="transition-transform duration-300 ease-brand group-hover:translate-x-1" />
           </MagneticButton>
-          <MagneticButton href="#proekti" onClick={go('proekti')} variant="ghost" className="w-full sm:w-auto">
+          <MagneticButton href="/proekti" onClick={go('/proekti')} variant="ghost" className="w-full sm:w-auto">
             {hero.secondaryCta}
           </MagneticButton>
         </m.div>

@@ -1,27 +1,22 @@
-import type { MouseEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { Logo } from '../components/brand/Logo'
 import { ArrowIcon } from '../components/ui/MagneticButton'
 import { siteConfig } from '../config'
 import { footer, nav, tech, ui } from '../content'
-import { useSmoothScroll } from '../lib/smooth-scroll'
 
 export function Footer() {
-  const scroll = useSmoothScroll()
   const { email, phone } = siteConfig.contact
-  const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    scroll.scrollTo(id)
-  }
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
   const heading = 'font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink-faint'
   const link = 'text-sm text-ink-muted transition-colors hover:text-cyan'
 
   return (
     <footer className="relative overflow-hidden border-t border-line">
-      <div className="container-x grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)] lg:gap-10">
-        <div className="flex flex-col gap-5">
-          <a href="#top" onClick={go('top')} aria-label={ui.home} className="-m-2 w-fit rounded-lg p-2">
+      <div className="container-x grid grid-cols-2 gap-x-6 gap-y-12 py-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,2fr)_minmax(0,3fr)_minmax(0,3fr)] lg:gap-10">
+        <div className="col-span-2 flex flex-col gap-5 lg:col-span-1">
+          <Link to="/" aria-label={ui.home} className="-m-2 w-fit rounded-lg p-2">
             <Logo ink="white" title={null} className="h-12 w-auto" />
-          </a>
+          </Link>
           <p className="max-w-xs text-pretty text-sm leading-relaxed text-ink-muted">{footer.tagline}</p>
           <p className="font-mono text-xs text-ink-faint">
             <span className="sr-only">{footer.techLabel}: </span>
@@ -33,10 +28,10 @@ export function Footer() {
           <p className={heading}>{footer.navTitle}</p>
           <ul className="mt-5 grid gap-3">
             {nav.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`} onClick={go(item.id)} className={link}>
+              <li key={item.to}>
+                <Link to={item.to} className={link}>
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -47,15 +42,15 @@ export function Footer() {
           <ul className="mt-5 grid gap-3">
             {footer.services.map((s) => (
               <li key={s}>
-                <a href="#uslugi" onClick={go('uslugi')} className={link}>
+                <Link to="/uslugi" className={link}>
                   {s}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        <div>
+        <div className="col-span-2 lg:col-span-1">
           <p className={heading}>{footer.contactTitle}</p>
           <ul className="mt-5 grid gap-3">
             {email && (
@@ -73,10 +68,10 @@ export function Footer() {
               </li>
             )}
             <li>
-              <a href="#kontakt" onClick={go('kontakt')} className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan">
+              <Link to="/kontakt" className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan">
                 {footer.contactCta}
                 <ArrowIcon className="transition-transform duration-300 ease-brand group-hover:translate-x-1" />
-              </a>
+              </Link>
             </li>
             <li className="pt-2 text-sm text-ink-faint">{footer.aboutLine}</li>
           </ul>
@@ -85,9 +80,9 @@ export function Footer() {
 
       <div className="container-x flex items-center justify-between border-t border-line py-6 text-sm text-ink-muted">
         <p>{footer.copyright}</p>
-        <a href="#top" onClick={go('top')} className="font-medium transition-colors hover:text-cyan">
+        <button type="button" onClick={scrollTop} className="font-medium transition-colors hover:text-cyan">
           {footer.toTop} ↑
-        </a>
+        </button>
       </div>
     </footer>
   )

@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
-import { portfolio } from './content'
+import { pages, portfolio } from './content'
 import { consoleGreeting } from './lib/console-greeting'
 import './styles/index.css'
 
@@ -17,7 +17,7 @@ const app = (
 
 // Which prerendered page belongs to this URL (see scripts/prerender.ts).
 const path = location.pathname.replace(/\/+$/, '') || '/'
-const known = path === '/' || portfolio.items.some((p) => path === `/proekti/${p.slug}`)
+const known = pages.some((p) => p.path === path) || portfolio.items.some((p) => path === `/proekti/${p.slug}`)
 const route = known ? path : '/404'
 
 // Hydrate only markup that was rendered for this route. A server that answers every URL with

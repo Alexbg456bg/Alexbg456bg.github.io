@@ -7,7 +7,7 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { meta, portfolio } from '../src/content'
+import { meta, pages as sitePages, portfolio } from '../src/content'
 import { siteConfig } from '../src/config'
 
 const root = resolve(import.meta.dirname, '..')
@@ -17,7 +17,7 @@ const ssrEntry = resolve(root, 'dist-ssr', 'entry-server.js')
 type Page = { url: string; title: string; description: string }
 
 const pages: Page[] = [
-  { url: '/', title: meta.title, description: meta.description },
+  ...sitePages.map((p) => ({ url: p.path, title: p.title, description: p.description })),
   ...portfolio.items.map((p) => ({
     url: `/proekti/${p.slug}`,
     title: `${p.title} — ${portfolio.title} | aecodezonebg`,

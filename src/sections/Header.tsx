@@ -1,10 +1,12 @@
 import { AnimatePresence, m, useMotionValueEvent, useScroll } from 'framer-motion'
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Bracket, Logo } from '../components/brand/Logo'
 import { MagneticButton } from '../components/ui/MagneticButton'
 import { hero, nav, ui } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
+import { useGo } from '../lib/nav'
 import { useSmoothScroll } from '../lib/smooth-scroll'
 
 export function Header() {
@@ -40,12 +42,12 @@ export function Header() {
     }
   }, [open, scroll])
 
-  const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    setOpen(false)
-    scroll.scrollTo(id)
-    history.replaceState(null, '', `#${id}`)
-  }
+  const go = useGo()
+  const { pathname } = useLocation()
+  const isCurrent = (to: string) => pathname === to || pathname.startsWith(`${to}/`)
+
+  // Close the mobile menu whenever the page changes.
+  useEffect(() => setOpen(false), [pathname])
 
   return (
     <>
@@ -61,38 +63,38 @@ export function Header() {
         aria-hidden="true"
       />
       <div className="container-x relative flex h-[var(--header-h)] items-center justify-between gap-6">
-        <a href="#top" onClick={go('top')} aria-label={ui.home} className="-m-2 rounded-lg p-2">
+        <Link to="/" aria-label={ui.home} className="-m-2 rounded-lg p-2">
           <Logo ink="white" title={null} className="h-9 w-auto sm:h-10" />
-        </a>
+        </Link>
 
         <nav aria-label={ui.mainNav} className="hidden md:block">
           <ul className="flex items-center gap-1">
             {nav.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  onClick={go(item.id)}
-                  className="group relative inline-flex items-center px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:text-ink"
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  aria-current={isCurrent(item.to) ? 'page' : undefined}
+                  className="group relative inline-flex items-center px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:text-ink aria-[current=page]:text-ink"
                 >
                   <Bracket
                     side="left"
                     strokeWidth={60}
-                    className="h-3 w-auto -translate-x-1 text-cyan opacity-0 transition duration-300 ease-brand group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    className="h-3 w-auto -translate-x-1 text-cyan opacity-0 transition duration-300 ease-brand group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-aria-[current=page]:translate-x-0 group-aria-[current=page]:opacity-100"
                   />
                   <span className="px-1.5">{item.label}</span>
                   <Bracket
                     side="right"
                     strokeWidth={60}
-                    className="h-3 w-auto translate-x-1 text-cyan opacity-0 transition duration-300 ease-brand group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    className="h-3 w-auto translate-x-1 text-cyan opacity-0 transition duration-300 ease-brand group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-aria-[current=page]:translate-x-0 group-aria-[current=page]:opacity-100"
                   />
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
 
         <div className="hidden md:block">
-          <MagneticButton href="#kontakt" onClick={go('kontakt')} className="!min-h-10 !px-5 !py-2 text-sm">
+          <MagneticButton href="/kontakt" onClick={go('/kontakt')} className="!min-h-10 !px-5 !py-2 text-sm">
             {hero.primaryCta}
           </MagneticButton>
         </div>
@@ -136,19 +138,19 @@ export function Header() {
             <ul className="container-x flex flex-col gap-2 pt-10">
               {nav.map((item, i) => (
                 <m.li
-                  key={item.id}
+                  key={item.to}
                   initial={{ opacity: 0, y: reduced ? 0 : 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: easeBrand, delay: reduced ? 0 : 0.05 + i * 0.06 }}
                 >
-                  <a
-                    href={`#${item.id}`}
-                    onClick={go(item.id)}
-                    className="flex items-baseline gap-4 border-b border-line py-4 text-3xl font-semibold tracking-tight"
+                  <Link
+                    to={item.to}
+                    aria-current={isCurrent(item.to) ? 'page' : undefined}
+                    className="flex items-baseline gap-4 border-b border-line py-4 text-3xl font-semibold tracking-tight aria-[current=page]:text-cyan"
                   >
                     <span className="font-mono text-xs text-cyan">0{i + 1}</span>
                     {item.label}
-                  </a>
+                  </Link>
                 </m.li>
               ))}
             </ul>

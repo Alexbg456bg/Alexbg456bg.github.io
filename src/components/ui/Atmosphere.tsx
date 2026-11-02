@@ -8,7 +8,7 @@ export function GradientMesh() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
       <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_15%_0%,rgba(0,194,255,0.10),transparent_70%),radial-gradient(50%_60%_at_100%_30%,rgba(27,58,102,0.55),transparent_70%),radial-gradient(60%_50%_at_30%_100%,rgba(19,45,84,0.6),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(163,181,202,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(163,181,202,0.035)_1px,transparent_1px)] bg-[size:96px_96px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
+      <div className="absolute inset-0 hidden bg-[linear-gradient(rgba(163,181,202,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(163,181,202,0.035)_1px,transparent_1px)] bg-[size:96px_96px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)] lg:block" />
     </div>
   )
 }
@@ -16,11 +16,11 @@ export function GradientMesh() {
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 
-/** Fine film grain over the whole page; static, so it costs nothing after first paint. */
+/** Fine film grain over the whole page. Desktop only: blending a fixed layer is costly on phones. */
 export function Grain() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[70] opacity-[0.06] mix-blend-soft-light"
+      className="pointer-events-none fixed inset-0 z-[70] hidden opacity-[0.06] mix-blend-soft-light lg:block"
       style={{ backgroundImage: NOISE }}
       aria-hidden="true"
     />

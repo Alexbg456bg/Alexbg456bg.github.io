@@ -53,6 +53,8 @@
         try {
           if (
             location.pathname === '/' &&
+            // Desktop only: on phones the intro would only delay the first screen.
+            matchMedia('(min-width: 1024px) and (pointer: fine)').matches &&
             !matchMedia('(prefers-reduced-motion: reduce)').matches &&
             !sessionStorage.getItem('ae-preloader-seen')
           ) {

@@ -1,13 +1,14 @@
 import { AnimatePresence, m } from 'framer-motion'
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useId, useState, type FormEvent } from 'react'
 import { Bracket, Logo } from '../components/brand/Logo'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
 import { formEndpoint, siteConfig } from '../config'
-import { contact } from '../content'
+import { about, contact } from '../content'
 import { easeBrand } from '../lib/motion'
-import { PREFILL_EVENT } from './Services'
+import { useLocation } from 'react-router-dom'
+import type { PrefillState } from './Services'
 
 type Fields = { name: string; email: string; message: string }
 type Key = keyof Fields
@@ -160,20 +161,13 @@ function ContactForm() {
   const [status, setStatus] = useState<Status>('idle')
   const [errorText, setErrorText] = useState(t.error)
   const [prefilled, setPrefilled] = useState(false)
-  const messageRef = useRef(fields.message)
-  messageRef.current = fields.message
-
-  // The service picker sends its summary here.
+  // The service picker opens this page with its summary in the router state.
+  const { state } = useLocation() as { state: PrefillState | null }
   useEffect(() => {
-    const onPrefill = (e: Event) => {
-      const text = (e as CustomEvent<string>).detail
-      setFields((f) => ({ ...f, message: messageRef.current.trim() ? `${messageRef.current.trim()}\n\n${text}` : text }))
-      setPrefilled(true)
-      setStatus('idle')
-    }
-    window.addEventListener(PREFILL_EVENT, onPrefill)
-    return () => window.removeEventListener(PREFILL_EVENT, onPrefill)
-  }, [])
+    if (!state?.prefill) return
+    setFields((f) => ({ ...f, message: state.prefill ?? '' }))
+    setPrefilled(true)
+  }, [state])
 
   const errorFor = (key: Key) => (touched[key] ? validateField(key, fields[key]) : undefined)
   const update = (key: Key) => (value: string) => setFields((f) => ({ ...f, [key]: value }))
@@ -295,8 +289,25 @@ export function Contact() {
     <section id="kontakt" aria-labelledby="kontakt-title" className="section">
       <div className="container-x relative grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
         <div>
-          <SectionHeader id="kontakt-title" eyebrow={contact.eyebrow} title={contact.title} intro={contact.intro} />
+          <SectionHeader as="h1" id="kontakt-title" eyebrow={contact.eyebrow} title={contact.title} intro={contact.intro} />
           <FadeIn delay={0.2}>
+            <div className="mt-8 flex items-center gap-4">
+              <span className="flex -space-x-3">
+                {about.people.map((person) => (
+                  <img
+                    key={person.name}
+                    src={person.photo}
+                    width={640}
+                    height={800}
+                    alt={person.alt}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-14 w-14 rounded-full object-cover object-[50%_25%] ring-4 ring-navy-950"
+                  />
+                ))}
+              </span>
+              <p className="text-sm font-semibold text-ink-muted">{contact.replyBy}</p>
+            </div>
             {(email || phone) && (
               <dl className="mt-10 grid gap-5">
                 {email && (

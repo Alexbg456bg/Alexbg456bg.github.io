@@ -39,9 +39,9 @@ function ProjectText({ project, index }: { project: Project; index: number }) {
         </p>
         <LiveDot slug={project.slug} />
       </div>
-      <h3 id={`p-${project.slug}`} className="mt-5 text-[clamp(2rem,4vw,3.75rem)] font-bold leading-[1.02] tracking-tight">
+      <h2 id={`p-${project.slug}`} className="mt-5 text-[clamp(2rem,4vw,3.75rem)] font-bold leading-[1.02] tracking-tight">
         {project.title}
-      </h3>
+      </h2>
       <dl className="mt-6 grid max-w-md gap-4">
         {(
           [
@@ -159,7 +159,7 @@ export function Portfolio() {
     return (
       <section ref={section} id="proekti" aria-labelledby="proekti-title" className="section">
         <div className="container-x">
-          <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} intro={portfolio.intro} />
+          <SectionHeader as="h1" id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} intro={portfolio.intro} />
           <ul className="mt-14 grid gap-20 sm:mt-20 sm:gap-28">
             {portfolio.items.map((p, i) => (
               <li key={p.slug}>
@@ -185,7 +185,7 @@ export function Portfolio() {
     <section ref={section} id="proekti" aria-labelledby="proekti-title" className="relative h-[100svh] overflow-hidden">
       <div ref={stage} className="container-x grid h-full grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-center gap-16 py-24">
         <div>
-          <SectionHeader id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} />
+          <SectionHeader as="h1" id="proekti-title" eyebrow={portfolio.eyebrow} title={portfolio.title} />
           <div className="relative mt-10 min-h-[24rem]">
             <AnimatePresence mode="wait" initial={false}>
               <m.div

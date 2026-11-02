@@ -8,19 +8,20 @@ import { ServiceVisual } from '../components/ui/ServiceVisual'
 import { configurator as c } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
-import { useSmoothScroll } from '../lib/smooth-scroll'
+import { useNavigate } from 'react-router-dom'
 
-export const PREFILL_EVENT = 'ae:prefill'
+/** Router state key the contact page reads to prefill its message. */
+export type PrefillState = { prefill?: string }
 
 const STEPS = c.steps.length
 
 /**
  * Signature moment 3 — "Какъв сайт ви трябва?". Three quick choices; the list of what the
- * site includes builds up next to them. The last step hands the summary to the contact form.
+ * site includes builds up next to them. The last step opens the contact page with the summary in the message.
  */
 export function Services() {
   const reduced = useReducedMotion()
-  const scroll = useSmoothScroll()
+  const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [choices, setChoices] = useState<Record<string, string>>({})
 
@@ -35,8 +36,7 @@ export function Services() {
 
   const send = () => {
     const message = [c.messageIntro, ...includes.map((i) => `— ${i}`)].join('\n')
-    window.dispatchEvent(new CustomEvent<string>(PREFILL_EVENT, { detail: message }))
-    scroll.scrollTo('kontakt')
+    navigate('/kontakt', { state: { prefill: message } satisfies PrefillState })
   }
 
   const current = c.steps[step]
@@ -50,7 +50,7 @@ export function Services() {
   return (
     <section id="uslugi" aria-labelledby="uslugi-title" className="section">
       <div className="container-x">
-        <SectionHeader id="uslugi-title" eyebrow={c.eyebrow} title={c.title} intro={c.intro} split />
+        <SectionHeader as="h1" id="uslugi-title" eyebrow={c.eyebrow} title={c.title} intro={c.intro} split />
 
         <div className="mt-14 grid gap-6 sm:mt-20 lg:grid-cols-[minmax(0,8fr)_minmax(0,4fr)] lg:gap-8">
           <div className="glass-border relative overflow-hidden rounded-card bg-navy-850/50 p-5 sm:p-8">
@@ -86,7 +86,7 @@ export function Services() {
                     <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
                       {c.stepLabel} {step + 1} / {STEPS}
                     </p>
-                    <h3 className="mt-3 text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-tight tracking-tight">{current.question}</h3>
+                    <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-tight tracking-tight">{current.question}</h2>
                     <div className="mt-8 grid gap-4 sm:grid-cols-2">
                       {current.options.map((o) => {
                         const selected = choices[current.id] === o.id
@@ -133,7 +133,7 @@ export function Services() {
                         <Bracket side="right" className="h-16 w-auto" />
                       </m.span>
                     </span>
-                    <h3 className="mt-8 text-[clamp(1.75rem,3.4vw,2.6rem)] font-bold tracking-tight">{c.summaryTitle}</h3>
+                    <h2 className="mt-8 text-[clamp(1.75rem,3.4vw,2.6rem)] font-bold tracking-tight">{c.summaryTitle}</h2>
                     <p className="mt-3 max-w-md text-lg text-ink-muted">{c.summaryText}</p>
                     <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
                       <MagneticButton onClick={send}>

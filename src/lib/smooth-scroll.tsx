@@ -6,6 +6,8 @@ type ScrollApi = {
   scrollTo: (target: string | HTMLElement | number) => void
   stop: () => void
   start: () => void
+  /** Jump to the top at once (new page). */
+  reset: () => void
   /** Subscribe to scroll updates (used to keep GSAP ScrollTrigger in sync). */
   onScroll: (cb: () => void) => () => void
 }
@@ -44,6 +46,10 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       },
       stop: () => lenisRef.current?.stop(),
       start: () => lenisRef.current?.start(),
+      reset: () => {
+        if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true, force: true })
+        else window.scrollTo(0, 0)
+      },
       onScroll: (cb) => {
         listeners.current.add(cb)
         return () => listeners.current.delete(cb)

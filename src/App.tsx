@@ -1,74 +1,97 @@
-import { AnimatePresence, LazyMotion, MotionConfig } from 'framer-motion'
+import { AnimatePresence, LazyMotion, MotionConfig, domMax, m } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
 import { GradientMesh, Grain } from './components/ui/Atmosphere'
 import { CustomCursor } from './components/ui/CustomCursor'
-import { SideProgress } from './components/ui/SideProgress'
-import { portfolio, ui } from './content'
+import { pages, portfolio, ui } from './content'
 import { useReducedMotion } from './lib/media'
-import { useIntroReady } from './lib/preloader'
-import { SmoothScrollProvider } from './lib/smooth-scroll'
+import { easeBrand } from './lib/motion'
+import { SmoothScrollProvider, useSmoothScroll } from './lib/smooth-scroll'
+import { pageViews } from './pages'
 import { CaseStudy } from './sections/CaseStudy'
-import { About } from './sections/About'
-import { Contact } from './sections/Contact'
-import { Faq } from './sections/Faq'
 import { Footer } from './sections/Footer'
 import { Header } from './sections/Header'
-import { Hero } from './sections/Hero'
 import { NotFound } from './sections/NotFound'
-import { Portfolio } from './sections/Portfolio'
-import { Pricing } from './sections/Pricing'
-import { Process } from './sections/Process'
-import { Services } from './sections/Services'
 
-// Animation features are fetched after first render, keeping them out of the critical bundle.
-const loadMotionFeatures = () => import('./lib/motion-features').then((mod) => mod.default)
+/** Which page a URL shows. A case study (/proekti/:slug) opens over the projects page. */
+function resolve(pathname: string) {
+  const path = pathname.replace(/\/+$/, '') || '/'
+  const slug = path.match(/^\/proekti\/([^/]+)$/)?.[1]
+  const project = slug ? portfolio.items.find((p) => p.slug === slug) : undefined
+  const page = pages.find((p) => p.path === (project ? '/proekti' : path))
+  return { path, project, page }
+}
 
-export default function App() {
-  const reduced = useReducedMotion()
+/** New page: jump to the top, set the title and move focus to the content (not on first load). */
+function usePageChange(path: string, title: string | undefined) {
+  const scroll = useSmoothScroll()
+  const first = useRef(true)
+  useEffect(() => {
+    if (title) document.title = title
+    if (first.current) {
+      first.current = false
+      return
+    }
+    scroll.reset()
+    document.getElementById('main')?.focus({ preventScroll: true })
+  }, [path, title, scroll])
+}
+
+function Site() {
   const location = useLocation()
   const match = useMatch('/proekti/:slug')
-  const project = match ? portfolio.items.find((p) => p.slug === match.params.slug) : undefined
-  const ready = useIntroReady()
-  const page = useRef<HTMLDivElement>(null)
-  const missing = location.pathname !== '/' && !project
+  const { project, page } = resolve(location.pathname)
+  const pageRef = useRef<HTMLDivElement>(null)
+  // True until the first page has rendered, so the initial (prerendered) page does not animate in.
+  const first = useRef(true)
+  useEffect(() => {
+    first.current = false
+  }, [])
+  // A case study keeps the projects page behind it, so only the base page counts as a page change.
+  usePageChange(page?.path ?? location.pathname, project ? undefined : page?.title)
 
   // While a case study is open, the page behind it is inert (no focus, no clicks, hidden from AT).
   // React 18 has no typed `inert` prop, so it is set directly.
   useEffect(() => {
-    page.current?.toggleAttribute('inert', !!project)
+    pageRef.current?.toggleAttribute('inert', !!project)
   }, [project])
 
+  if (!page || (match && !project)) return <NotFound />
+
+  const View = pageViews[page.path]
   return (
-    <LazyMotion features={loadMotionFeatures} strict>
+    <>
+      <a href="#main" className="skip-link">
+        {ui.skipToContent}
+      </a>
+      <div ref={pageRef}>
+        <Header />
+        <main id="main" tabIndex={-1} className="outline-none">
+          {/* Page change: the new page rises in (transform/opacity). Not on first load. */}
+          <m.div
+            key={page.path}
+            initial={first.current ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: easeBrand }}
+          >
+            <View />
+          </m.div>
+        </main>
+        <Footer />
+      </div>
+      <AnimatePresence>{project && <CaseStudy key={project.slug} project={project} />}</AnimatePresence>
+    </>
+  )
+}
+
+export default function App() {
+  const reduced = useReducedMotion()
+  return (
+    <LazyMotion features={domMax} strict>
       <MotionConfig reducedMotion={reduced ? 'always' : 'never'}>
         <SmoothScrollProvider>
           <GradientMesh />
-          {missing ? (
-            <NotFound />
-          ) : (
-            <>
-              <a href="#main" className="skip-link">
-                {ui.skipToContent}
-              </a>
-              <div ref={page}>
-                <Header />
-                <main id="main" tabIndex={-1} className="outline-none">
-                  <Hero ready={ready} />
-                  <Portfolio />
-                  <Services />
-                  <Pricing />
-                  <Process />
-                  <About />
-                  <Faq />
-                  <Contact />
-                </main>
-                <Footer />
-              </div>
-              <SideProgress />
-              <AnimatePresence>{project && <CaseStudy key={project.slug} project={project} />}</AnimatePresence>
-            </>
-          )}
+          <Site />
           <CustomCursor />
           <Grain />
         </SmoothScrollProvider>
