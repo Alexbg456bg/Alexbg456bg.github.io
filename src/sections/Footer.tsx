@@ -79,11 +79,29 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Oversized wordmark that fades into the page, cut off by the bottom bar. */}
-      <div className="container-x pointer-events-none select-none overflow-hidden" aria-hidden="true">
-        <p className="translate-y-[18%] whitespace-nowrap bg-gradient-to-b from-ink/[0.14] to-transparent bg-clip-text text-center text-[clamp(2.75rem,12vw,12.5rem)] font-bold leading-none tracking-[-0.05em] text-transparent">
-          {footer.wordmark}
-        </p>
+      {/* Oversized wordmark that fades downward. SVG textLength stretches it to exactly the
+          container width, so the whole name is visible on every screen size. */}
+      <div className="container-x pointer-events-none select-none pb-4" aria-hidden="true">
+        <svg viewBox="0 0 1200 182" className="block h-auto w-full overflow-visible" focusable="false">
+          <defs>
+            <linearGradient id="footer-wordmark" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#EAF1F8" stopOpacity="0.16" />
+              <stop offset="1" stopColor="#EAF1F8" stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+          <text
+            x="0"
+            y="140"
+            textLength="1200"
+            lengthAdjust="spacingAndGlyphs"
+            fill="url(#footer-wordmark)"
+            fontSize="178"
+            fontWeight="700"
+            className="font-sans"
+          >
+            {footer.wordmark}
+          </text>
+        </svg>
       </div>
 
       {/* Right padding keeps "to top" clear of the floating call button. */}
