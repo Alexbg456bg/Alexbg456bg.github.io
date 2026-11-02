@@ -9,7 +9,7 @@ import { ProjectVideo } from '../components/ui/ProjectVideo'
 import { Tilt } from '../components/ui/Tilt'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
-import { cursor, portfolio, ui, type Project } from '../content'
+import { portfolio, preview, ui, type Project } from '../content'
 import { useMinWidth, useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
 import { useSmoothScroll } from '../lib/smooth-scroll'
@@ -26,6 +26,18 @@ function LiveDot({ slug }: { slug: string }) {
         <span className="relative h-2 w-2 rounded-full bg-cyan" />
       </span>
       {portfolio.live}
+    </span>
+  )
+}
+
+/** "Разгледай" pill that appears in the middle of a project frame on hover (parent needs `group`). */
+export function PreviewPill() {
+  return (
+    <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-navy-950/0 transition-colors duration-500 ease-brand group-hover:bg-navy-950/35">
+      <span className="inline-flex translate-y-3 scale-90 items-center gap-2 rounded-full bg-cyan px-5 py-2.5 text-sm font-semibold text-navy-950 opacity-0 shadow-[0_10px_40px_-8px_rgba(0,194,255,0.7)] transition duration-500 ease-brand group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
+        {preview.label}
+        <ArrowIcon />
+      </span>
     </span>
   )
 }
@@ -167,7 +179,7 @@ export function Portfolio() {
                   <FadeIn className="grid items-center gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
                     <Tilt>
                       <Link to={`/proekti/${p.slug}`} tabIndex={-1} aria-hidden="true" className="block">
-                        <ProjectShot project={p} />
+                        <ProjectShot project={p} video />
                       </Link>
                     </Tilt>
                     <ProjectText project={p} index={i} />
@@ -218,11 +230,10 @@ export function Portfolio() {
               to={`/proekti/${project.slug}`}
               tabIndex={-1}
               aria-hidden="true"
-              data-cursor="view"
-              data-cursor-label={cursor.view}
-              className="block"
+              className="group block"
             >
-              <div className="glass-border overflow-hidden rounded-2xl bg-navy-850 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.9)]">
+              <div className="glass-border relative overflow-hidden rounded-2xl bg-navy-850 shadow-[0_60px_140px_-40px_rgba(0,0,0,0.9)]">
+                <PreviewPill />
                 <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
                   <span className="flex gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-ink/20" />

@@ -8,6 +8,7 @@ import { Pricing } from './sections/Pricing'
 import { Process } from './sections/Process'
 import { PricingTeaser } from './sections/PricingTeaser'
 import { ProjectsTeaser } from './sections/ProjectsTeaser'
+import { ServiceStrip } from './sections/ServiceStrip'
 import { Services } from './sections/Services'
 import type { ReactNode } from 'react'
 
@@ -32,7 +33,9 @@ export const pageViews: Record<string, () => ReactNode> = {
   '/': () => (
     <>
       <Hero />
+      <ServiceStrip />
       <ProjectsTeaser />
+      <Process />
       <PricingTeaser />
       <CtaBand />
     </>

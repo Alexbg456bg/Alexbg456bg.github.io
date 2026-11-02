@@ -1,5 +1,6 @@
 import { m } from 'framer-motion'
 import type { Project } from '../../content'
+import { InViewVideo } from './ProjectVideo'
 
 const src = (p: Project, variant: 'desktop' | 'mobile', w?: number) =>
   `/projects/${p.image}-${variant}${w ? `-${w}` : ''}.webp`
@@ -7,15 +8,18 @@ const src = (p: Project, variant: 'desktop' | 'mobile', w?: number) =>
 /**
  * Desktop screenshot in a minimal browser frame, with the mobile screenshot
  * overlapping it. `layoutId` lets the case-study view morph out of the card.
+ * With `video`, the desktop frame plays the scroll-through recording while on screen.
  */
 export function ProjectShot({
   project,
   priority = false,
+  video = false,
   sizes = '(min-width: 1024px) 60vw, 92vw',
   className = '',
 }: {
   project: Project
   priority?: boolean
+  video?: boolean
   sizes?: string
   className?: string
 }) {
@@ -28,17 +32,23 @@ export function ProjectShot({
           <span className="h-2 w-2 rounded-full bg-ink/20" />
           <span className="ml-3 truncate font-mono text-[0.65rem] text-ink-faint">{project.host}</span>
         </div>
-        <img
-          src={src(project, 'desktop', 960)}
-          srcSet={`${src(project, 'desktop', 960)} 960w, ${src(project, 'desktop')} 1440w`}
-          sizes={sizes}
-          width={1440}
-          height={900}
-          alt={project.alt}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-          className="block aspect-[16/10] w-full object-cover object-top"
-        />
+        {video ? (
+          <div className="aspect-[16/10] w-full bg-navy-950">
+            <InViewVideo project={project} />
+          </div>
+        ) : (
+          <img
+            src={src(project, 'desktop', 960)}
+            srcSet={`${src(project, 'desktop', 960)} 960w, ${src(project, 'desktop')} 1440w`}
+            sizes={sizes}
+            width={1440}
+            height={900}
+            alt={project.alt}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            className="block aspect-[16/10] w-full object-cover object-top"
+          />
+        )}
       </div>
       <div className="absolute -bottom-6 right-3 w-[22%] overflow-hidden rounded-[0.9rem] border-[3px] border-navy-700 bg-navy-850 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] sm:-bottom-8 sm:right-6 sm:rounded-[1.25rem] sm:border-4">
         <img

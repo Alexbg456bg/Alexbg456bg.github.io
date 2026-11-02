@@ -2,7 +2,7 @@ import { AnimatePresence, LazyMotion, MotionConfig, domMax, m } from 'framer-mot
 import { useEffect, useRef } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
 import { GradientMesh, Grain } from './components/ui/Atmosphere'
-import { CustomCursor } from './components/ui/CustomCursor'
+import { ScrollProgress } from './components/ui/ScrollProgress'
 import { pages, portfolio, ui } from './content'
 import { useReducedMotion } from './lib/media'
 import { easeBrand } from './lib/motion'
@@ -92,7 +92,7 @@ export default function App() {
         <SmoothScrollProvider>
           <GradientMesh />
           <Site />
-          <CustomCursor />
+          <ScrollProgress />
           <Grain />
         </SmoothScrollProvider>
       </MotionConfig>

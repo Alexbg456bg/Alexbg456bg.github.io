@@ -90,7 +90,18 @@ export const hero = {
 // Technologies we actually use. Shown once, in the footer.
 export const tech = ['React', 'TypeScript', 'Tailwind CSS', 'Vite']
 
-export const cursor = { view: 'Виж' }
+/** Endless strip under the hero: only services and promises we actually offer. */
+export const strip = [
+  'Каталожни сайтове',
+  'Бизнес сайтове',
+  'Админ панел',
+  'Мобилна версия',
+  'Хостинг',
+  'Месечна поддръжка',
+  'Оферта до 24 часа',
+]
+
+export const preview = { label: 'Разгледай' }
 
 /** Home page: the four projects as a teaser that leads to /proekti. */
 export const teaser = {
@@ -417,6 +428,8 @@ export const contact = {
     privacy: 'Използваме името и имейла ви само, за да отговорим на запитването. Формата се изпраща през Formspree.',
     error: 'Нещо се обърка при изпращането. Опитайте отново след малко.',
     notConfigured: 'Формата още не е свързана. Моля, опитайте по-късно.',
+    mailSubject: 'Запитване за сайт',
+    mailOpened: 'Отворихме имейл програмата ви с готово съобщение — остава само да натиснете „Изпрати“. Ако не се отвори, пишете ни директно на aecodezonebg@gmail.com.',
     again: 'Изпрати ново съобщение',
     prefilled: 'Попълнихме съобщението с избора ви. Можете да го допълните.',
     errors: {

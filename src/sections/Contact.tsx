@@ -108,7 +108,7 @@ function FloatingField({
 }
 
 /** Brackets slide together and the logo draws itself. */
-function Success({ onAgain }: { onAgain: () => void }) {
+function Success({ onAgain, text }: { onAgain: () => void; text: string }) {
   // The logo starts drawing as the brackets meet.
   const [showLogo, setShowLogo] = useState(false)
   useEffect(() => {
@@ -145,7 +145,7 @@ function Success({ onAgain }: { onAgain: () => void }) {
         </m.span>
         {showLogo && <Logo ink="white" draw title={null} className="h-20 w-auto" />}
       </span>
-      <p className="mt-8 max-w-sm text-lg font-medium">{t.success}</p>
+      <p className="mt-8 max-w-sm text-lg font-medium">{text}</p>
       <button type="button" onClick={onAgain} className="mt-6 text-sm font-semibold text-cyan underline-offset-4 hover:underline">
         {t.again}
       </button>
@@ -160,6 +160,7 @@ function ContactForm() {
   const [touched, setTouched] = useState<Partial<Record<Key, boolean>>>({})
   const [status, setStatus] = useState<Status>('idle')
   const [errorText, setErrorText] = useState(t.error)
+  const [successText, setSuccessText] = useState(t.success)
   const [prefilled, setPrefilled] = useState(false)
   // The service picker opens this page with its summary in the router state.
   const { state } = useLocation() as { state: PrefillState | null }
@@ -181,9 +182,19 @@ function ContactForm() {
       document.getElementById(ids[firstInvalid])?.focus()
       return
     }
+    // No Formspree form yet: hand the message to the visitor's mail app, already filled in.
     if (!formEndpoint) {
-      setErrorText(t.notConfigured)
-      setStatus('error')
+      const to = siteConfig.contact.email
+      if (!to) {
+        setErrorText(t.notConfigured)
+        setStatus('error')
+        return
+      }
+      const subject = `${t.mailSubject} — ${fields.name}`
+      const body = `${fields.message}\n\n${fields.name}\n${fields.email}`
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      setSuccessText(t.mailOpened)
+      setStatus('success')
       return
     }
     const honeypot = (e.currentTarget.elements.namedItem('_gotcha') as HTMLInputElement | null)?.value
@@ -195,6 +206,7 @@ function ContactForm() {
         body: JSON.stringify({ ...fields, _gotcha: honeypot ?? '' }),
       })
       if (!res.ok) throw new Error(String(res.status))
+      setSuccessText(t.success)
       setStatus('success')
       setFields({ name: '', email: '', message: '' })
       setTouched({})
@@ -209,7 +221,7 @@ function ContactForm() {
     <div className="glass-border relative overflow-hidden rounded-card bg-navy-850/60 p-6 sm:p-10">
       <AnimatePresence mode="wait" initial={false}>
         {status === 'success' ? (
-          <Success onAgain={() => setStatus('idle')} />
+          <Success text={successText} onAgain={() => setStatus('idle')} />
         ) : (
           <m.form
             key="form"

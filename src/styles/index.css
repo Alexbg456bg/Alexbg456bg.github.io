@@ -227,16 +227,6 @@
   }
 }
 
-/* Custom cursor: hide the native one only where ours is active (desktop, fine pointer). */
-html.has-cursor,
-html.has-cursor * {
-  cursor: none !important;
-}
-html.has-cursor input,
-html.has-cursor textarea {
-  cursor: text !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

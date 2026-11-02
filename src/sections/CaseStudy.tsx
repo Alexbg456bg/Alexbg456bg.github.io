@@ -137,7 +137,7 @@ export function CaseStudy({ project }: { project: Project }) {
             </div>
 
             <div>
-              <ProjectShot project={project} priority sizes="(min-width: 1024px) 64vw, 92vw" />
+              <ProjectShot project={project} priority video sizes="(min-width: 1024px) 64vw, 92vw" />
 
               <m.figure className="mt-20 sm:mt-24" {...rise(0.45)}>
                 <figcaption className="eyebrow">{portfolio.mobileLabel}</figcaption>

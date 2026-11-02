@@ -7,3 +7,4 @@ dist
 .review
 dist-ssr
 .video-tmp
+.claude
