@@ -79,8 +79,18 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="container-x flex items-center justify-between border-t border-line py-6 text-sm text-ink-muted">
-        <p>{footer.copyright}</p>
+      {/* Oversized wordmark that fades into the page, cut off by the bottom bar. */}
+      <div className="container-x pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        <p className="translate-y-[18%] whitespace-nowrap bg-gradient-to-b from-ink/[0.14] to-transparent bg-clip-text text-center text-[clamp(2.75rem,12vw,12.5rem)] font-bold leading-none tracking-[-0.05em] text-transparent">
+          {footer.wordmark}
+        </p>
+      </div>
+
+      {/* Right padding keeps "to top" clear of the floating call button. */}
+      <div className="container-x flex items-center justify-between border-t border-line py-6 pr-20 text-sm text-ink-muted sm:pr-24 lg:pr-24">
+        <p>
+          {footer.wordmark} © {new Date().getFullYear()}
+        </p>
         <button type="button" onClick={scrollTop} className="font-medium transition-colors hover:text-cyan">
           {footer.toTop} ↑
         </button>

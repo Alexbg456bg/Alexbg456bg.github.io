@@ -1,6 +1,7 @@
 import { AnimatePresence, LazyMotion, MotionConfig, domMax, m } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
+import { Bracket } from './components/brand/Logo'
 import { GradientMesh, Grain } from './components/ui/Atmosphere'
 import { FloatingContact } from './components/ui/FloatingContact'
 import { ScrollProgress } from './components/ui/ScrollProgress'
@@ -43,6 +44,7 @@ function Site() {
   const match = useMatch('/proekti/:slug')
   const { project, page } = resolve(location.pathname)
   const pageRef = useRef<HTMLDivElement>(null)
+  const reduced = useReducedMotion()
   // True until the first page has rendered, so the initial (prerendered) page does not animate in.
   const first = useRef(true)
   useEffect(() => {
@@ -80,6 +82,27 @@ function Site() {
         </main>
         <Footer />
       </div>
+      {/* Page change: a navy curtain with the logo's brackets lifts off the new page. Not on first load. */}
+      {!first.current && !reduced && (
+        <m.div
+          key={`curtain-${page.path}`}
+          className="pointer-events-none fixed inset-0 z-[58] flex origin-top items-center justify-center bg-navy-900"
+          initial={{ scaleY: 1 }}
+          animate={{ scaleY: 0 }}
+          transition={{ duration: 0.75, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
+          aria-hidden="true"
+        >
+          <m.span
+            className="flex items-center gap-3 text-cyan"
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.35 }}
+          >
+            <Bracket side="left" className="h-12 w-auto" />
+            <Bracket side="right" className="h-12 w-auto" />
+          </m.span>
+        </m.div>
+      )}
       <AnimatePresence>{project && <CaseStudy key={project.slug} project={project} />}</AnimatePresence>
     </>
   )

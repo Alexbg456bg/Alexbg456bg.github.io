@@ -111,6 +111,33 @@ export const contactFab = {
   form: 'Форма за запитване',
 }
 
+/** Home page: confirmed facts only (see the pricing, FAQ and portfolio below). */
+export const facts = {
+  label: 'Накратко за нас',
+  items: [
+    { value: 4, label: 'сайта на живо, които можете да отворите' },
+    { value: 24, suffix: ' ч', label: 'до конкретна оферта' },
+    { value: 700, prefix: 'от', suffix: ' €', label: 'за каталожен сайт' },
+    { value: 100, suffix: '%', label: 'адаптивни — телефон, таблет, компютър' },
+  ] as { value: number; prefix?: string; suffix?: string; label: string }[],
+  clientsLabel: 'Правили сме сайтове за',
+  clients: ['PestGuard Pro ЕООД', 'АДРИНА ООД'],
+}
+
+/** Home page: the four services, leading to /uslugi. Copy matches the configurator. */
+export const servicesOverview = {
+  eyebrow: 'Услуги',
+  title: 'Какво правим',
+  cta: 'Изберете вашия сайт',
+  more: 'Научете повече',
+  items: [
+    { icon: 'catalog', title: 'Каталожен сайт', text: 'Продукти или услуги в категории, със страница за всеки артикул.' },
+    { icon: 'business', title: 'Бизнес сайт', text: 'Какво предлагате, кои сте и как да се свържат с вас.' },
+    { icon: 'cms', title: 'Админ панел', text: 'Сменяте текстове и снимки сами, без да пишете код.' },
+    { icon: 'hosting', title: 'Хостинг и поддръжка', text: 'Пускаме сайта онлайн и оставаме насреща всеки месец.' },
+  ] satisfies { icon: ServiceIcon; title: string; text: string }[],
+}
+
 /** Home page: the four projects as a teaser that leads to /proekti. */
 export const teaser = {
   eyebrow: 'Проекти',
@@ -151,7 +178,7 @@ export type Project = {
 }
 
 export const portfolio = {
-  eyebrow: '01 — Проекти',
+  eyebrow: 'Проекти',
   title: 'Избрани проекти',
   intro: 'Четири сайта на живо. Отворете който и да е от тях.',
   clientLabel: 'Клиент',
@@ -231,7 +258,7 @@ export type ConfigStep = { id: string; question: string; options: ConfigOption[]
 
 /** "Какъв сайт ви трябва?" — only the confirmed services, no prices. */
 export const configurator = {
-  eyebrow: '02 — Услуги',
+  eyebrow: 'Услуги',
   title: 'Какъв сайт ви трябва?',
   intro: 'Изберете с няколко клика. Ще видите какво включва сайтът и ще ни изпратите заявката.',
   base: ['Добре изглежда на телефон, таблет и компютър'],
@@ -321,7 +348,7 @@ export const process = {
 
 /** Prices confirmed by the team, in EUR, "from". Do not add others. */
 export const pricing = {
-  eyebrow: '03 — Цени',
+  eyebrow: 'Цени',
   title: 'Цени',
   intro: 'Цените са ориентировъчни, „от“. Точната сума зависи от обхвата.',
   from: 'от',
@@ -375,7 +402,7 @@ export const pricing = {
 
 /** About the team. Only confirmed facts — no bio, years of experience or client counts. */
 export const about = {
-  eyebrow: '04 — За нас',
+  eyebrow: 'За нас',
   title: 'Хората зад сайта',
   intro: 'Ние сме Алекс и Емо — малък екип, студенти в ТУ-Варна.',
   points: [
@@ -423,7 +450,7 @@ export const faq = {
 }
 
 export const contact = {
-  eyebrow: '05 — Контакт',
+  eyebrow: 'Контакт',
   title: 'Да направим вашия сайт',
   intro: 'Разкажете ни накратко за проекта. До 24 часа ще ви отговорим с въпроси или с оферта.',
   replyBy: 'Отговарят ви лично Алекс и Емо',
@@ -463,7 +490,6 @@ export const footer = {
   aboutLine: 'Алекс и Емо, ТУ-Варна',
   wordmark: 'aecodezonebg',
   techLabel: 'С какво работим',
-  copyright: 'aecodezonebg © 2026',
   toTop: 'Към началото',
 }
 

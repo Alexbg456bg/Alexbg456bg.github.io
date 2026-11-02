@@ -1,6 +1,7 @@
 import { About } from './sections/About'
 import { Contact } from './sections/Contact'
 import { CtaBand } from './sections/CtaBand'
+import { Facts } from './sections/Facts'
 import { Faq } from './sections/Faq'
 import { Hero } from './sections/Hero'
 import { Portfolio } from './sections/Portfolio'
@@ -8,6 +9,7 @@ import { Pricing } from './sections/Pricing'
 import { Process } from './sections/Process'
 import { PricingTeaser } from './sections/PricingTeaser'
 import { ProjectsTeaser } from './sections/ProjectsTeaser'
+import { ServicesOverview } from './sections/ServicesOverview'
 import { ServiceStrip } from './sections/ServiceStrip'
 import { Services } from './sections/Services'
 import type { ReactNode } from 'react'
@@ -35,6 +37,8 @@ export const pageViews: Record<string, () => ReactNode> = {
       <Hero />
       <ServiceStrip />
       <ProjectsTeaser />
+      <Facts />
+      <ServicesOverview />
       <Process />
       <PricingTeaser />
       <CtaBand />
