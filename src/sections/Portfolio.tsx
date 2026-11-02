@@ -45,7 +45,7 @@ function ProjectText({ project, index }: { project: Project; index: number }) {
       <dl className="mt-6 grid max-w-md gap-4">
         {(
           [
-            [portfolio.clientLabel, project.client],
+            [project.client ? portfolio.clientLabel : portfolio.kindLabel, project.client ?? portfolio.ownProject],
             [portfolio.taskLabel, project.task],
             [portfolio.doneLabel, project.done],
           ] as const

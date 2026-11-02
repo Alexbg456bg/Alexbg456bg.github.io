@@ -284,7 +284,7 @@ function ContactForm() {
 }
 
 export function Contact() {
-  const { email, phone } = siteConfig.contact
+  const { email, phones } = siteConfig.contact
   return (
     <section id="kontakt" aria-labelledby="kontakt-title" className="section">
       <div className="container-x relative grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
@@ -308,7 +308,7 @@ export function Contact() {
               </span>
               <p className="text-sm font-semibold text-ink-muted">{contact.replyBy}</p>
             </div>
-            {(email || phone) && (
+            {(email || phones.length > 0) && (
               <dl className="mt-10 grid gap-5">
                 {email && (
                   <div>
@@ -320,14 +320,17 @@ export function Contact() {
                     </dd>
                   </div>
                 )}
-                {phone && (
+                {phones.length > 0 && (
                   <div>
                     <dt className="eyebrow">{contact.phoneLabel}</dt>
-                    <dd className="mt-2 text-lg font-semibold">
-                      <a href={`tel:${phone.replace(/\s/g, '')}`} className="hover:text-cyan">
-                        {phone}
-                      </a>
-                    </dd>
+                    {phones.map((p) => (
+                      <dd key={p.tel} className="mt-2">
+                        <a href={`tel:${p.tel}`} className="text-lg font-semibold hover:text-cyan">
+                          {p.display}
+                        </a>
+                        <span className="ml-2 text-sm text-ink-muted">{p.name}</span>
+                      </dd>
+                    ))}
                   </div>
                 )}
               </dl>

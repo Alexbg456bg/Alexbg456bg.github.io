@@ -5,7 +5,7 @@ import { siteConfig } from '../config'
 import { footer, nav, tech, ui } from '../content'
 
 export function Footer() {
-  const { email, phone } = siteConfig.contact
+  const { email, phones } = siteConfig.contact
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
   const heading = 'font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink-faint'
   const link = 'text-sm text-ink-muted transition-colors hover:text-cyan'
@@ -60,13 +60,14 @@ export function Footer() {
                 </a>
               </li>
             )}
-            {phone && (
-              <li>
-                <a href={`tel:${phone.replace(/\s/g, '')}`} className={link}>
-                  {phone}
+            {phones.map((p) => (
+              <li key={p.tel}>
+                <a href={`tel:${p.tel}`} className={link}>
+                  {p.display}
                 </a>
+                <span className="block text-xs text-ink-faint">{p.name}</span>
               </li>
-            )}
+            ))}
             <li>
               <Link to="/kontakt" className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan">
                 {footer.contactCta}
