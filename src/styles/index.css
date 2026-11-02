@@ -144,6 +144,67 @@
   .animate-swap-b {
     animation: swap 3.2s steps(1) infinite reverse;
   }
+  .animate-drift-a {
+    animation: drift-a 22s ease-in-out infinite;
+  }
+  .animate-drift-b {
+    animation: drift-b 28s ease-in-out infinite;
+  }
+  .animate-drift-c {
+    animation: drift-c 18s ease-in-out infinite;
+  }
+  .animate-wiggle {
+    animation: wiggle 5s ease-in-out infinite;
+  }
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18vw, 6rem, 0) scale(1.15);
+  }
+}
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-14vw, 8rem, 0) scale(0.95);
+  }
+}
+@keyframes drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  33% {
+    transform: translate3d(-10vw, -4rem, 0);
+  }
+  66% {
+    transform: translate3d(8vw, 3rem, 0);
+  }
+}
+/* A short shake every few seconds, to draw the eye to the call button. */
+@keyframes wiggle {
+  0%,
+  86%,
+  100% {
+    transform: rotate(0);
+  }
+  88%,
+  92%,
+  96% {
+    transform: rotate(-12deg);
+  }
+  90%,
+  94%,
+  98% {
+    transform: rotate(12deg);
+  }
 }
 
 @keyframes marquee {

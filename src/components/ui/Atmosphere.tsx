@@ -13,6 +13,20 @@ export function GradientMesh() {
   )
 }
 
+/**
+ * Soft glows that drift slowly behind the hero. Blurred once, then moved with transform only;
+ * with reduced motion they simply stand still (the global rule stops the animation).
+ */
+export function Aurora() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="animate-drift-a absolute -left-[10%] top-[8%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(0,194,255,0.22),transparent_65%)] blur-2xl sm:h-[36rem] sm:w-[36rem]" />
+      <div className="animate-drift-b absolute -right-[12%] top-[2%] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(27,58,102,0.9),transparent_65%)] blur-2xl sm:h-[40rem] sm:w-[40rem]" />
+      <div className="animate-drift-c absolute left-[30%] top-[45%] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,rgba(127,224,255,0.12),transparent_65%)] blur-2xl" />
+    </div>
+  )
+}
+
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 

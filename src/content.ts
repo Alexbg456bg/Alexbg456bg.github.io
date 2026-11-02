@@ -103,6 +103,14 @@ export const strip = [
 
 export const preview = { label: 'Разгледай' }
 
+/** Floating call button in the corner. */
+export const contactFab = {
+  open: 'Свържете се с нас',
+  close: 'Затвори',
+  call: 'Обадете ни се',
+  form: 'Форма за запитване',
+}
+
 /** Home page: the four projects as a teaser that leads to /proekti. */
 export const teaser = {
   eyebrow: 'Проекти',
@@ -158,6 +166,9 @@ export const portfolio = {
   live: 'Жив сайт',
   desktopLabel: 'Десктоп',
   mobileLabel: 'Мобилен',
+  devicesTitle: 'На всяко устройство',
+  devicesText:
+    'Сайтът се подрежда за телефон, таблет и компютър. Проверяваме го на различни размери, преди да го пуснем.',
   items: [
     {
       slug: 'balgaria',

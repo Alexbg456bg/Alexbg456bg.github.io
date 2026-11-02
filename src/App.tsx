@@ -2,6 +2,7 @@ import { AnimatePresence, LazyMotion, MotionConfig, domMax, m } from 'framer-mot
 import { useEffect, useRef } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
 import { GradientMesh, Grain } from './components/ui/Atmosphere'
+import { FloatingContact } from './components/ui/FloatingContact'
 import { ScrollProgress } from './components/ui/ScrollProgress'
 import { pages, portfolio, ui } from './content'
 import { useReducedMotion } from './lib/media'
@@ -93,6 +94,7 @@ export default function App() {
           <GradientMesh />
           <Site />
           <ScrollProgress />
+          <FloatingContact />
           <Grain />
         </SmoothScrollProvider>
       </MotionConfig>

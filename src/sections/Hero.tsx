@@ -1,5 +1,6 @@
 import { m } from 'framer-motion'
 import { Bracket } from '../components/brand/Logo'
+import { Aurora } from '../components/ui/Atmosphere'
 import { CursorGrid } from '../components/ui/CursorGrid'
 import { HeroScene } from '../components/ui/HeroScene'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
@@ -36,6 +37,7 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative overflow-hidden pb-16 pt-[calc(var(--header-h)+3rem)] sm:pb-24 sm:pt-[calc(var(--header-h)+5rem)]"
     >
+      <Aurora />
       <CursorGrid />
 
       <div className="container-x relative flex flex-col items-center text-center">

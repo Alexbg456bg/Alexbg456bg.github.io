@@ -17,7 +17,7 @@ import { useSmoothScroll } from '../lib/smooth-scroll'
 const isLive = (slug: string) => (live as Record<string, boolean>)[slug] === true
 const pad = (n: number) => String(n).padStart(2, '0')
 
-function LiveDot({ slug }: { slug: string }) {
+export function LiveDot({ slug }: { slug: string }) {
   if (!isLive(slug)) return null
   return (
     <span className="inline-flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-ink-muted">
