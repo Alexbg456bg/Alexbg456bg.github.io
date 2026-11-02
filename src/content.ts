@@ -412,7 +412,7 @@ export const about = {
   ] satisfies { icon: ServiceIcon; title: string; text: string }[],
   people: [
     { name: 'Алекс', photo: '/team/aleks.webp', alt: 'Портретна снимка на Алекс' },
-    { name: 'Емо', photo: '/team/emo.webp', alt: 'Снимка на Емо в планината' },
+    { name: 'Емо', photo: '/team/emo.webp', alt: 'Портретна снимка на Емо' },
   ],
 }
 
