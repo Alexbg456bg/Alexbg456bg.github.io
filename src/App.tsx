@@ -8,6 +8,7 @@ import { ScrollProgress } from './components/ui/ScrollProgress'
 import { pages, portfolio, ui } from './content'
 import { useReducedMotion } from './lib/media'
 import { easeBrand } from './lib/motion'
+import { refreshPlaySlots } from './lib/play-slot'
 import { SmoothScrollProvider, useSmoothScroll } from './lib/smooth-scroll'
 import { pageViews } from './pages'
 import { CaseStudy } from './sections/CaseStudy'
@@ -57,6 +58,8 @@ function Site() {
   // React 18 has no typed `inert` prop, so it is set directly.
   useEffect(() => {
     pageRef.current?.toggleAttribute('inert', !!project)
+    // Videos behind the case study stop; the ones on the page resume once it closes.
+    refreshPlaySlots()
   }, [project])
 
   if (!page || (match && !project)) return <NotFound />

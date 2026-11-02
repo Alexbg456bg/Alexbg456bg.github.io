@@ -3,17 +3,18 @@ import { useEffect, useRef } from 'react'
 import videos from '../../generated/videos.json'
 import type { Project } from '../../content'
 import { useReducedMotion } from '../../lib/media'
+import { usePlaySlot } from '../../lib/play-slot'
 import { projectImage } from './ProjectShot'
 
 /**
  * ProjectVideo that manages itself: loads once it is about a screen away,
- * plays only while it is actually visible. Fills its parent.
+ * plays only while it is the most visible video on the page. Fills its parent.
  */
 export function InViewVideo({ project }: { project: Project }) {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
   const near = useInView(ref, { once: true, margin: '60% 0px' })
-  const visible = useInView(ref, { amount: 0.3 })
+  const visible = usePlaySlot(ref)
   return (
     <div ref={ref} className="h-full w-full">
       <ProjectVideo project={project} load={near} playing={visible} reduced={reduced} />

@@ -12,6 +12,7 @@ import { SectionHeader } from '../components/ui/SectionHeader'
 import { portfolio, preview, ui, type Project } from '../content'
 import { useMinWidth, useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
+import { usePlaySlot } from '../lib/play-slot'
 import { useSmoothScroll } from '../lib/smooth-scroll'
 
 const isLive = (slug: string) => (live as Record<string, boolean>)[slug] === true
@@ -101,20 +102,15 @@ export function Portfolio() {
   const pinned = wide && !reduced
   const [active, setActive] = useState(0)
   const [near, setNear] = useState(false)
-  const [visible, setVisible] = useState(false)
+  // Play only while the section holds the page's single video slot (on screen, not behind a case study).
+  const visible = usePlaySlot(section, pinned)
 
-  // Load videos only once the section is close, play only while it is on screen.
+  // Load videos only once the section is close.
   useEffect(() => {
     if (!pinned || !section.current) return
-    const el = section.current
     const nearObs = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '100% 0px' })
-    const visObs = new IntersectionObserver(([e]) => setVisible(e.isIntersecting))
-    nearObs.observe(el)
-    visObs.observe(el)
-    return () => {
-      nearObs.disconnect()
-      visObs.disconnect()
-    }
+    nearObs.observe(section.current)
+    return () => nearObs.disconnect()
   }, [pinned])
 
   useEffect(() => {
