@@ -1,11 +1,12 @@
 import { AnimatePresence, m } from 'framer-motion'
 import { useEffect, useId, useState, type FormEvent } from 'react'
 import { Bracket, Logo } from '../components/brand/Logo'
+import { ChatIcon } from '../components/ui/FloatingContact'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
-import { formEndpoint, siteConfig } from '../config'
-import { about, contact } from '../content'
+import { formEndpoint, siteConfig, viberHref } from '../config'
+import { about, contact, viber } from '../content'
 import { easeBrand } from '../lib/motion'
 import { useLocation } from 'react-router-dom'
 import type { PrefillState } from './Services'
@@ -341,6 +342,16 @@ export function Contact() {
                           {p.display}
                         </a>
                         <span className="ml-2 text-sm text-ink-muted">{p.name}</span>
+                        {p.viber && (
+                          <a
+                            href={viberHref(p.tel)}
+                            aria-label={`${viber.write} ${p.name}`}
+                            className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-cyan/10 px-2.5 py-1 align-middle text-xs font-semibold text-cyan ring-1 ring-inset ring-cyan/25 transition-colors hover:bg-cyan/20"
+                          >
+                            <ChatIcon className="h-3.5 w-3.5" />
+                            {viber.label}
+                          </a>
+                        )}
                       </dd>
                     ))}
                   </div>

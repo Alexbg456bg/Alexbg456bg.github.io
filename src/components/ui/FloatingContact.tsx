@@ -1,8 +1,8 @@
 import { AnimatePresence, m, useMotionValueEvent, useScroll } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { siteConfig } from '../../config'
-import { contactFab } from '../../content'
+import { siteConfig, viberHref } from '../../config'
+import { contactFab, viber } from '../../content'
 import { useReducedMotion } from '../../lib/media'
 import { easeBrand } from '../../lib/motion'
 
@@ -21,8 +21,24 @@ function PhoneIcon({ className = '' }: { className?: string }) {
   )
 }
 
+/** Chat bubble used for the Viber links. */
+export function ChatIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
+      <path
+        d="M12 3c5 0 9 3.4 9 7.6s-4 7.6-9 7.6c-.9 0-1.8-.1-2.6-.3L5 20.5l1.1-3.6C4.2 15.5 3 13.2 3 10.6 3 6.4 7 3 12 3Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 /**
- * Round call button in the bottom-right corner. Opens a small card with both phones,
+ * Round call button in the bottom-right corner. Opens a small card with both phones (call or Viber),
  * the email and a link to the form. Shows once the visitor scrolls; hidden on /kontakt.
  */
 export function FloatingContact() {
@@ -61,7 +77,7 @@ export function FloatingContact() {
         {open && (
           <m.div
             id="fab-panel"
-            className="glass-border w-72 origin-bottom-right rounded-card bg-navy-850/95 p-5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md"
+            className="glass-border w-[min(20rem,calc(100vw-2rem))] origin-bottom-right rounded-card bg-navy-850/95 p-5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-md"
             initial={{ opacity: 0, scale: reduced ? 1 : 0.9, y: reduced ? 0 : 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: reduced ? 1 : 0.95, y: reduced ? 0 : 8 }}
@@ -70,8 +86,8 @@ export function FloatingContact() {
             <p className="eyebrow">{contactFab.call}</p>
             <ul className="mt-3 grid gap-2">
               {phones.map((p) => (
-                <li key={p.tel}>
-                  <a href={`tel:${p.tel}`} className="group flex items-center gap-3 rounded-xl bg-navy-950/60 px-3 py-2.5 transition-colors hover:bg-cyan/10">
+                <li key={p.tel} className="flex gap-2">
+                  <a href={`tel:${p.tel}`} className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl bg-navy-950/60 px-3 py-2.5 transition-colors hover:bg-cyan/10">
                     <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan/10 text-cyan ring-1 ring-inset ring-cyan/25">
                       <PhoneIcon className="h-4 w-4" />
                     </span>
@@ -80,6 +96,17 @@ export function FloatingContact() {
                       <span className="block font-mono text-xs text-ink-muted">{p.display}</span>
                     </span>
                   </a>
+                  {p.viber && (
+                    <a
+                      href={viberHref(p.tel)}
+                      aria-label={`${viber.write} ${p.name}`}
+                      title={viber.label}
+                      className="flex w-14 shrink-0 flex-col items-center justify-center gap-0.5 rounded-xl bg-navy-950/60 text-[0.6rem] font-semibold text-ink-muted transition-colors hover:bg-cyan/10 hover:text-cyan"
+                    >
+                      <ChatIcon className="h-5 w-5 text-cyan" />
+                      {viber.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

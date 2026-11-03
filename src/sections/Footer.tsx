@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/brand/Logo'
 import { ArrowIcon } from '../components/ui/MagneticButton'
-import { siteConfig } from '../config'
-import { footer, nav, tech, ui } from '../content'
+import { siteConfig, viberHref } from '../config'
+import { footer, nav, tech, ui, viber } from '../content'
 
 export function Footer() {
   const { email, phones } = siteConfig.contact
+  const { company } = siteConfig
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
   const heading = 'font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink-faint'
   const link = 'text-sm text-ink-muted transition-colors hover:text-cyan'
@@ -65,6 +66,11 @@ export function Footer() {
                 <a href={`tel:${p.tel}`} className={link}>
                   {p.display}
                 </a>
+                {p.viber && (
+                  <a href={viberHref(p.tel)} aria-label={`${viber.write} ${p.name}`} className={`${link} ml-2 text-xs`}>
+                    · {viber.label}
+                  </a>
+                )}
                 <span className="block text-xs text-ink-faint">{p.name}</span>
               </li>
             ))}
@@ -108,6 +114,11 @@ export function Footer() {
       <div className="container-x flex items-center justify-between border-t border-line py-6 pr-20 text-sm text-ink-muted sm:pr-24 lg:pr-24">
         <p>
           {footer.wordmark} © {new Date().getFullYear()}
+          {company && (
+            <span className="block text-xs text-ink-faint sm:ml-3 sm:inline">
+              {company.name} · {footer.eikLabel} {company.eik} · {company.city}
+            </span>
+          )}
         </p>
         <button type="button" onClick={scrollTop} className="font-medium transition-colors hover:text-cyan">
           {footer.toTop} ↑

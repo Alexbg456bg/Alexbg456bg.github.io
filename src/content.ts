@@ -99,6 +99,7 @@ export const strip = [
   'Хостинг',
   'Месечна поддръжка',
   'Оферта до 24 часа',
+  'Корекции до одобрение',
 ]
 
 export const preview = { label: 'Разгледай' }
@@ -107,8 +108,31 @@ export const preview = { label: 'Разгледай' }
 export const contactFab = {
   open: 'Свържете се с нас',
   close: 'Затвори',
-  call: 'Обадете ни се',
+  call: 'Обадете ни се или пишете',
   form: 'Форма за запитване',
+}
+
+/** Viber links next to each phone. */
+export const viber = {
+  label: 'Viber',
+  /** Accessible name, followed by the person's name. */
+  write: 'Пишете във Viber на',
+}
+
+/** Confirmed by the team: design corrections until the client approves it. */
+export const guarantee = {
+  title: 'Корекции до одобрение',
+  text: 'Правим корекции по дизайна, докато не го одобрите.',
+}
+
+/**
+ * Client quotes on the home page. The section stays hidden while the list is empty.
+ * TODO(team): add only real quotes, approved by the client. `slug` links the project.
+ */
+export const testimonials = {
+  eyebrow: 'Отзиви',
+  title: 'Какво казват клиентите',
+  items: [] as { quote: string; name: string; role: string; company: string; slug?: string }[],
 }
 
 /** Home page: confirmed facts only (see the pricing, FAQ and portfolio below). */
@@ -150,7 +174,7 @@ export const pricingTeaser = {
   eyebrow: 'Цени',
   title: 'Ясни цени от началото',
   cta: 'Всички цени',
-  note: 'Хостинг, домейн и поддръжка — отделно.',
+  note: 'Хостинг, домейн и поддръжка — отделно. Корекции по дизайна до одобрение.',
 }
 
 export const cta = {
@@ -340,7 +364,7 @@ export const process = {
   steps: [
     { title: 'Запитване', text: 'Пишете ни какво ви трябва. Няколко изречения стигат.' },
     { title: 'Оферта', text: 'До 24 часа получавате конкретна оферта.' },
-    { title: 'Дизайн и изработка', text: 'Проектираме дизайна и изграждаме сайта.' },
+    { title: 'Дизайн и изработка', text: 'Проектираме дизайна, коригираме го, докато го одобрите, и изграждаме сайта.' },
     { title: 'Пускане', text: 'Качваме сайта и проверяваме, че всичко работи.' },
     { title: 'Поддръжка', text: 'Оставаме насреща с месечна поддръжка.' },
   ],
@@ -443,6 +467,10 @@ export const faq = {
       a: 'Каталожен сайт е от 400 €, с админ панел — от 500 €. Бизнес сайтът е по запитване. Хостингът, домейнът и поддръжката са отделно — вижте секция „Цени“.',
     },
     {
+      q: 'Ами ако не харесам дизайна?',
+      a: 'Правим корекции по дизайна, докато не го одобрите. Изграждаме сайта по дизайн, който харесвате.',
+    },
+    {
       q: 'Колко бързо получавам оферта?',
       a: 'До 24 часа след запитването ви изпращаме конкретна оферта.',
     },
@@ -491,6 +519,7 @@ export const footer = {
   wordmark: 'aecodezonebg',
   techLabel: 'С какво работим',
   toTop: 'Към началото',
+  eikLabel: 'ЕИК',
 }
 
 export const notFound = {

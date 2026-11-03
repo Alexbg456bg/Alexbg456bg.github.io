@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { ArrowIcon, MagneticButton } from '../components/ui/MagneticButton'
 import { FadeIn } from '../components/ui/RevealText'
 import { SectionHeader } from '../components/ui/SectionHeader'
-import { pricing as p } from '../content'
+import { guarantee, pricing as p } from '../content'
 import { useReducedMotion } from '../lib/media'
 import { easeBrand } from '../lib/motion'
 import { useGo } from '../lib/nav'
@@ -169,6 +169,10 @@ export function Pricing() {
           <p className="flex items-center gap-2 text-sm text-ink-muted">
             <span className="h-2 w-2 rounded-full bg-cyan" aria-hidden="true" />
             {p.offer}
+          </p>
+          <p className="flex items-center gap-2 text-sm text-ink-muted" title={guarantee.text}>
+            <span className="h-2 w-2 rounded-full bg-cyan" aria-hidden="true" />
+            {guarantee.title}
           </p>
         </FadeIn>
       </div>
